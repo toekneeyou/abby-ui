@@ -96,6 +96,10 @@
     {
       "path": "assets/fonts/Roboto-ThinItalic.ttf",
       "sha1": "cc79d5a23bd0ec08b1d99f5390bf33cacc3082f4"
+    },
+    {
+      "path": "assets/images/sofi.jpeg",
+      "sha1": "f4f678a11f68446b86c6e47e9be6a9e1400c0dfa"
     }
   ]
 }
