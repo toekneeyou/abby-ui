@@ -13,8 +13,8 @@ export const colors = {
     0: '#EEE',
     10: '#DDD',
     20: '#CCC',
-    30: 'BBB',
-    40: 'AAA',
+    30: '#BBB',
+    40: '#AAA',
     50: '#999',
   },
   pistachio: {
