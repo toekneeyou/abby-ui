@@ -1,20 +1,36 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {useColorScheme} from 'react-native';
-import NetWorthView from './src/views/NetWorthView';
+import NetWorthScreen from './src/screens/NetWorthScreen';
+import TransactionsScreen from './src/screens/TransactionsScreen';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import BottomNavBar from './src/features/BottomNavBar';
+import SettingsScreen from './src/screens/SettingsScreen';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  'Net Worth': undefined;
+  Transactions: undefined;
+  Settings: undefined;
+};
+
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Net Worth">
-        <Stack.Screen name="Net Worth" component={NetWorthView} />
-      </Stack.Navigator>
+      <Tab.Navigator
+        tabBar={props => <BottomNavBar {...props} />}
+        initialRouteName="Net Worth"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Tab.Screen name="Net Worth" component={NetWorthScreen} />
+        <Tab.Screen name="Transactions" component={TransactionsScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
