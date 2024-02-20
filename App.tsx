@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {StyleSheet, useColorScheme} from 'react-native';
+import {useColorScheme} from 'react-native';
 import NetWorthView from './src/views/NetWorthView';
 
 const Stack = createNativeStackNavigator();
@@ -18,11 +18,5 @@ function App(): React.JSX.Element {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  app: {
-    flex: 1,
-  },
-});
 
 export default App;
