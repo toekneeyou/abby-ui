@@ -1,3 +1,7 @@
+## iOS linkage
+Remember to update iOS dependencies whenever you install new libraries that include native modules
+```npx pod-install ios```
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
