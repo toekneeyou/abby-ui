@@ -7,6 +7,7 @@ import TransactionsScreen from './src/screens/TransactionsScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BottomNavBar from './src/features/BottomNavBar';
 import SettingsScreen from './src/screens/SettingsScreen';
+import Header from './src/features/Header';
 
 export type RootStackParamList = {
   'Net Worth': undefined;
@@ -21,6 +22,7 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer>
+      <Header />
       <Tab.Navigator
         tabBar={props => <BottomNavBar {...props} />}
         initialRouteName="Net Worth"
