@@ -2,16 +2,16 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-
-import {RootStackParamList} from '../../App';
-import InfoDisplay from '../features/InfoDisplay';
-import {colors} from '../styles/styleVariables';
-import AccountCard from '../features/AccountCard';
 import {
   faArrowTrendUp,
   faCreditCard,
   faSackDollar,
 } from '@fortawesome/free-solid-svg-icons';
+
+import {RootStackParamList} from '../../App';
+import InfoDisplay from '../features/InfoDisplay';
+import {colors, spacing} from '../styles/styleVariables';
+import AccountCard from '../features/AccountCard';
 
 type NetWorthScreenProps = BottomTabScreenProps<
   RootStackParamList,
@@ -20,7 +20,7 @@ type NetWorthScreenProps = BottomTabScreenProps<
 
 export default function NetWorthScreen({navigation}: NetWorthScreenProps) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.screenContainer}>
       <ScrollView>
         <InfoDisplay />
         <View style={styles.accountCardsContainer}>
@@ -130,13 +130,16 @@ export default function NetWorthScreen({navigation}: NetWorthScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screenContainer: {
     flex: 1,
     backgroundColor: colors.eggplant[30],
   },
   accountCardsContainer: {
     backgroundColor: colors.eggplant[30],
-    padding: 15,
+    paddingTop: spacing.ends,
+    paddingBottom: spacing.ends,
+    paddingLeft: spacing.sides,
+    paddingRight: spacing.sides,
     rowGap: 15,
   },
 });

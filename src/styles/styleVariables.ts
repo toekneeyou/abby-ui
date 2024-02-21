@@ -10,7 +10,7 @@ export const colors = {
     50: '#3D2D36',
   },
   gray: {
-    0: '#EEE',
+    0: '#FAFAFA',
     10: '#DDD',
     20: '#CCC',
     30: '#BBB',
@@ -42,4 +42,13 @@ export const colors = {
     50: '#000',
   },
   white: '#fff',
+};
+
+export const spacing = {
+  sides: 10,
+  ends: 15,
+};
+
+export const borders = {
+  radius: 10,
 };

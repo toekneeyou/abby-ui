@@ -33,6 +33,25 @@ export const typography = StyleSheet.create({
   b3: {
     fontFamily: 'Roboto',
     fontSize: 12,
+    lineHeight: 12,
+    color: colors.black[20],
+  },
+  l1: {
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    lineHeight: 16,
+    color: colors.black[20],
+  },
+  l2: {
+    fontFamily: 'Roboto',
+    fontSize: 14,
+    lineHeight: 14,
+    color: colors.black[20],
+  },
+  l3: {
+    fontFamily: 'Roboto',
+    fontSize: 12,
+    lineHeight: 12,
     color: colors.black[20],
   },
 });

@@ -2,7 +2,7 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {colors} from '../styles/styleVariables';
+import {borders, colors, spacing} from '../styles/styleVariables';
 import Sofi from '../../assets/images/sofi.jpeg';
 import IconButton from '../components/IconButton';
 import {faChevronDown, faChevronUp} from '@fortawesome/free-solid-svg-icons';
@@ -98,7 +98,6 @@ export default function AccountCard({item}: AccountCardProps) {
         item={item}
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
-        g
       />
       {!isCollapsed &&
         item.accounts.map((account, index) => {
@@ -118,12 +117,15 @@ export default function AccountCard({item}: AccountCardProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    borderRadius: 10,
+    borderRadius: borders.radius,
     overflow: 'hidden',
   },
   header: {
     height: 65,
-    padding: 10,
+    paddingTop: 10,
+    paddingLeft: spacing.sides,
+    paddingRight: spacing.sides,
+    paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -138,7 +140,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray[0],
     borderBottomWidth: 1,
     borderBottomColor: colors.gray[10],
-    padding: 10,
+    paddingTop: 10,
+    paddingLeft: spacing.sides,
+    paddingRight: spacing.sides,
+    paddingBottom: 10,
     height: 65,
     flexDirection: 'row',
     alignItems: 'center',

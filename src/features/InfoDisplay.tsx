@@ -1,36 +1,37 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {colors} from '../styles/styleVariables';
-import {typography} from '../styles/globalStyles';
+
+import HeaderText from '../components/HeaderText';
+import BodyText from '../components/BodyText';
 
 export default function InfoDisplay() {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text style={typography.h3}>Net Worth</Text>
+        <HeaderText type="h3">Net Worth</HeaderText>
       </View>
       <View style={styles.value}>
-        <Text style={typography.h1}>$1,935</Text>
-        <Text
-          style={[
-            typography.b1,
-            {fontWeight: 'bold', alignSelf: 'flex-start'},
-          ]}>
+        <HeaderText>$2,459</HeaderText>
+        <BodyText style={{fontWeight: 'bold', alignSelf: 'flex-start'}}>
           .23
-        </Text>
+        </BodyText>
       </View>
       <View style={styles.info}>
-        <Text
-          style={[typography.b3, {color: colors.gray[50], fontWeight: 'bold'}]}>
+        <BodyText
+          type="b3"
+          style={{color: colors.gray[50], fontWeight: 'bold'}}>
           Feb 20, 2024
-        </Text>
-        <Text
-          style={[
-            typography.b3,
-            {color: colors.pistachio[10], fontWeight: 'bold', lineHeight: 12},
-          ]}>
+        </BodyText>
+        <BodyText
+          type="b3"
+          style={{
+            color: colors.pistachio[10],
+            fontWeight: 'bold',
+            lineHeight: 12,
+          }}>
           1.4%
-        </Text>
+        </BodyText>
       </View>
     </View>
   );
