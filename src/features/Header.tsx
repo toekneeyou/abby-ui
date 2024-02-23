@@ -1,48 +1,77 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Animated, LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import {faAdd} from '@fortawesome/free-solid-svg-icons';
-import {useNavigation} from '@react-navigation/native';
 
-import {typography} from '../styles/globalStyles';
-import {colors} from '../styles/styleVariables';
-import IconButton from '../components/IconButton';
+import {colors, spacing} from '../styles/styleVariables';
 import HeaderText from '../components/HeaderText';
+import IconButton from '../components/IconButton';
+import {
+  componentNames,
+  heights,
+  setLayout,
+  zIndices,
+} from '../store/layoutStore';
+import SubHeader from './SubHeader';
 
-export default function Header() {
-  const navigation = useNavigation();
+type HeaderProps = {};
+
+export default function Header({}: HeaderProps) {
+  const handleLayout = (e: LayoutChangeEvent) => {
+    setLayout({
+      name: 'header',
+      layout: e.nativeEvent.layout,
+    });
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.left}>
-        <HeaderText type="h3" style={{color: colors.eggplant[20]}}>
-          ABBY
-        </HeaderText>
-      </View>
-      <View style={styles.right}>
-        <IconButton
-          icon={faAdd}
-          type="text"
-          onPressHandler={() => console.log('add')}
-        />
-      </View>
-    </SafeAreaView>
+    <View style={styles.header} onLayout={handleLayout}>
+      <Animated.View
+        style={[
+          styles.mainHeader,
+          {
+            height: heights.header,
+          },
+        ]}>
+        <View style={styles.mainHeaderLeft}>
+          <HeaderText type="h3" style={{color: colors.eggplant[20]}}>
+            ABBY
+          </HeaderText>
+        </View>
+        <View style={styles.mainHeaderRight}>
+          <IconButton
+            icon={faAdd}
+            type="text"
+            onPressHandler={() => console.log('add')}
+          />
+        </View>
+      </Animated.View>
+
+      <SubHeader />
+    </View>
   );
 }
 
+Header.name = componentNames.header;
+
 const styles = StyleSheet.create({
-  container: {
+  header: {
+    position: 'relative',
+    backgroundColor: 'green',
+    overflow: 'visible',
+    zIndex: zIndices.header,
+  },
+  mainHeader: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: spacing.sides,
+    paddingRight: spacing.sides,
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row',
+    zIndex: zIndices.header,
+    position: 'relative',
+    backgroundColor: colors.white,
   },
-  left: {
-    paddingTop: 5,
-    paddingLeft: 10,
-    paddingBottom: 5,
-  },
-  right: {
-    paddingTop: 5,
-    paddingRight: 10,
-    paddingBottom: 5,
-  },
+  mainHeaderLeft: {},
+  mainHeaderRight: {},
 });

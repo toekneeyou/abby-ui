@@ -1,12 +1,12 @@
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useState} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {borders, colors, spacing} from '../styles/styleVariables';
+import React from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
+
+import {borders, colors} from '../styles/styleVariables';
 import Sofi from '../../assets/images/sofi.jpeg';
-import IconButton from '../components/IconButton';
-import {faChevronDown, faChevronUp} from '@fortawesome/free-solid-svg-icons';
 import {typography} from '../styles/globalStyles';
+import Accordion from '../components/Accordion';
 
 type AccountCardItem = {
   category: string;
@@ -24,19 +24,11 @@ type AccountCardAccount = {
 
 type AccountCardHeaderProps = {
   item: AccountCardItem;
-  isCollapsed: boolean;
-  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function AccountCardHeader({
-  item,
-  isCollapsed,
-  setIsCollapsed,
-}: AccountCardHeaderProps) {
+function AccountCardHeader({item}: AccountCardHeaderProps) {
   return (
-    <Pressable
-      onPress={() => setIsCollapsed(!isCollapsed)}
-      style={styles.header}>
+    <View style={styles.header}>
       <View style={styles.headerLeft}>
         <FontAwesomeIcon icon={item.icon} color={colors.eggplant[50]} />
         <Text style={[typography.b1, {fontWeight: 'bold'}]}>
@@ -45,12 +37,8 @@ function AccountCardHeader({
       </View>
       <View style={styles.headerRight}>
         <Text style={[typography.b1, {fontWeight: 'bold'}]}>{item.value}</Text>
-        <FontAwesomeIcon
-          icon={isCollapsed ? faChevronDown : faChevronUp}
-          size={16}
-        />
       </View>
-    </Pressable>
+    </View>
   );
 }
 
@@ -66,19 +54,19 @@ function AccountCardItem({account, isLast}: AccountCardItemProps) {
         <View>
           <Image
             source={Sofi}
-            style={{width: 16, height: 16, borderRadius: 100}}
+            style={{width: 24, height: 24, borderRadius: 100}}
           />
         </View>
         <View style={styles.itemLeftInfo}>
           <Text style={typography.b1}>{account.name}</Text>
-          <Text style={[typography.b2, {color: colors.black[0]}]}>
+          <Text style={[typography.b2, {color: colors.gray[50]}]}>
             {account.type}
           </Text>
         </View>
       </View>
       <View style={styles.itemRight}>
         <Text style={typography.b1}>{account.value}</Text>
-        <Text style={[typography.b2, {color: colors.black[0]}]}>
+        <Text style={[typography.b2, {color: colors.gray[50]}]}>
           {account.syncTime}
         </Text>
       </View>
@@ -91,41 +79,27 @@ type AccountCardProps = {
 };
 
 export default function AccountCard({item}: AccountCardProps) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
   return (
-    <View style={styles.container}>
-      <AccountCardHeader
-        item={item}
-        isCollapsed={isCollapsed}
-        setIsCollapsed={setIsCollapsed}
-      />
-      {!isCollapsed &&
-        item.accounts.map((account, index) => {
-          const isLast = index === item.accounts.length - 1;
-          return (
-            <AccountCardItem
-              account={account}
-              key={`${account.name}${account.value}`}
-              isLast={isLast}
-            />
-          );
-        })}
-    </View>
+    <Accordion
+      header={<AccountCardHeader item={item} />}
+      initialIsCollapsed={false}>
+      {item.accounts.map((account, index) => {
+        const isLast = index === item.accounts.length - 1;
+        return (
+          <AccountCardItem
+            account={account}
+            key={`${account.name}${account.value}`}
+            isLast={isLast}
+          />
+        );
+      })}
+    </Accordion>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.white,
-    borderRadius: borders.radius,
-    overflow: 'hidden',
-  },
   header: {
     height: 65,
-    paddingTop: 10,
-    paddingLeft: spacing.sides,
-    paddingRight: spacing.sides,
-    paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -137,14 +111,11 @@ const styles = StyleSheet.create({
   },
   headerRight: {flexDirection: 'row', alignItems: 'center', columnGap: 5},
   item: {
-    backgroundColor: colors.gray[0],
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray[10],
-    paddingTop: 10,
-    paddingLeft: spacing.sides,
-    paddingRight: spacing.sides,
-    paddingBottom: 10,
+    backgroundColor: colors.gray[0],
+    borderBottomColor: colors.white,
     height: 65,
+    padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
