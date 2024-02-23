@@ -11,7 +11,8 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 import {colors} from '../styles/styleVariables';
-import {RootStackParamList} from '../../App';
+import {RootStackParamList} from '../store/generalStore';
+import {componentNames} from '../store/layoutStore';
 
 export default function BottomNavBar({
   state,
@@ -58,6 +59,8 @@ export default function BottomNavBar({
   );
 }
 
+BottomNavBar.name = componentNames.bottomNavBar;
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -65,7 +68,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 90,
     backgroundColor: colors.white,
     justifyContent: 'space-around',
   },
@@ -75,6 +77,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   selectedItem: {
     borderTopColor: colors.eggplant[10],

@@ -1,56 +1,72 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import {colors} from '../styles/styleVariables';
-import {typography} from '../styles/globalStyles';
+import {Animated, StyleSheet, View} from 'react-native';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faArrowUpLong} from '@fortawesome/free-solid-svg-icons';
 
-export default function InfoDisplay() {
+import {colors} from '../styles/styleVariables';
+import HeaderText from '../components/HeaderText';
+import BodyText from '../components/BodyText';
+import {componentNames, heights} from '../store/layoutStore';
+
+type InfoDisplayProps = {};
+
+export default function InfoDisplay({}: InfoDisplayProps) {
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.infoDisplay, {height: heights.infoDisplay}]}>
       <View style={styles.title}>
-        <Text style={typography.h3}>Net Worth</Text>
+        <HeaderText type="h3">Net Worth</HeaderText>
       </View>
       <View style={styles.value}>
-        <Text style={typography.h1}>$1,935</Text>
-        <Text
-          style={[
-            typography.b1,
-            {fontWeight: 'bold', alignSelf: 'flex-start'},
-          ]}>
+        <HeaderText>$2,459</HeaderText>
+        <BodyText style={{fontWeight: 'bold', transform: [{translateY: 5}]}}>
           .23
-        </Text>
+        </BodyText>
       </View>
       <View style={styles.info}>
-        <Text
-          style={[typography.b3, {color: colors.gray[50], fontWeight: 'bold'}]}>
+        <BodyText
+          type="b3"
+          style={{color: colors.gray[50], fontWeight: 'bold'}}>
           Feb 20, 2024
-        </Text>
-        <Text
-          style={[
-            typography.b3,
-            {color: colors.pistachio[10], fontWeight: 'bold', lineHeight: 12},
-          ]}>
-          1.4%
-        </Text>
+        </BodyText>
+        <View style={styles.percentage}>
+          <BodyText
+            type="b3"
+            style={{
+              color: colors.pistachio[30],
+              fontWeight: 'bold',
+            }}>
+            <FontAwesomeIcon
+              icon={faArrowUpLong}
+              size={10}
+              color={colors.pistachio[30]}
+            />
+            1.4%
+          </BodyText>
+        </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
+InfoDisplay.name = componentNames.infoDisplay;
+
 const styles = StyleSheet.create({
-  container: {
+  infoDisplay: {
     backgroundColor: colors.white,
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 15,
     paddingRight: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   value: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'center',
     columnGap: 1,
@@ -61,5 +77,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     columnGap: 10,
+  },
+  percentage: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
 });

@@ -38,6 +38,7 @@
 		F7423922550646DC9072E44F /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87A10DD4FE294D9F9E7F7BAD /* Lato-BoldItalic.ttf */; };
 		FC23771CB68341D6954A6D36 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1D1D68573DD4660BBBD58AD /* Roboto-Thin.ttf */; };
 		FEC80F85A313428EAA5EAD61 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65DD1DECA1B3409C91579DCF /* Roboto-Black.ttf */; };
+		B09B941AF5B44A059E6309DA /* sofi.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 712BC662C62F4D2E8E375FEC /* sofi.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		F11F5633A0834057B76A7B49 /* Lato-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Thin.ttf"; path = "../assets/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
 		FA098A1A89B243D1B1FEB782 /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = ../assets/fonts/OFL.txt; sourceTree = "<group>"; };
 		FF2AC7200CDB4D7189639CE1 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
+		712BC662C62F4D2E8E375FEC /* sofi.jpeg */ = {isa = PBXFileReference; name = "sofi.jpeg"; path = "../assets/images/sofi.jpeg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 				3695B803FE2349DAB0726007 /* Roboto-ThinItalic.ttf */,
 				113BA9B8DEE441ACA4748BBE /* LICENSE.txt */,
 				FA098A1A89B243D1B1FEB782 /* OFL.txt */,
+				712BC662C62F4D2E8E375FEC /* sofi.jpeg */,
 			);
 			name = Resources;
 			path = "";
@@ -348,6 +351,7 @@
 				699244CD8470469E96F1DF2B /* Roboto-ThinItalic.ttf in Resources */,
 				3E6E6883731845758267B6E9 /* LICENSE.txt in Resources */,
 				C1D6E5288EA9436DB80F1693 /* OFL.txt in Resources */,
+				B09B941AF5B44A059E6309DA /* sofi.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
