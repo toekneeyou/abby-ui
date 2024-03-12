@@ -3,17 +3,20 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from './store';
 
 export type RootStackParamList = {
-  'Net Worth': {handleScroll: any};
+  Loading: undefined;
+  'Net Worth': undefined;
   Transactions: undefined;
   Settings: undefined;
 };
 
 interface GeneralState {
   currentRoute: keyof RootStackParamList;
+  isAppLoading: boolean;
 }
 
 export const initialState: GeneralState = {
-  currentRoute: 'Net Worth',
+  currentRoute: 'Loading',
+  isAppLoading: true,
 };
 
 export const generalSlice = createSlice({
@@ -28,11 +31,15 @@ export const generalSlice = createSlice({
         state.currentRoute = action.payload;
       }
     },
+    setIsAppLoading: (state, action: PayloadAction<boolean>) => {
+      state.isAppLoading = action.payload;
+    },
   },
 });
 
-export const {setCurrentRoute} = generalSlice.actions;
+export const {setCurrentRoute, setIsAppLoading} = generalSlice.actions;
 
 export const getCurrentRoute = (state: RootState) => state.general.currentRoute;
+export const getIsAppLoading = (state: RootState) => state.general.isAppLoading;
 
 export default generalSlice.reducer;

@@ -3,7 +3,6 @@ import {Animated, LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import {faAdd} from '@fortawesome/free-solid-svg-icons';
 
 import {colors, spacing} from '../styles/styleVariables';
-import HeaderText from '../components/HeaderText';
 import IconButton from '../components/IconButton';
 import {
   componentNames,
@@ -13,10 +12,16 @@ import {
 } from '../store/layoutStore';
 import SubHeader from './SubHeader';
 import Logo from '../components/Logo';
+import {useAppSelector} from '../store/store';
+import {getIsAppLoading} from '../store/generalStore';
 
 type HeaderProps = {};
 
 export default function Header({}: HeaderProps) {
+  const isAppLoading = useAppSelector(getIsAppLoading);
+
+  if (isAppLoading) return null;
+
   const handleLayout = (e: LayoutChangeEvent) => {
     setLayout({
       name: 'header',

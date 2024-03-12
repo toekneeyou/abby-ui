@@ -1,6 +1,6 @@
 import React from 'react';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import {SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faDollar,
@@ -11,8 +11,9 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 import {colors} from '../styles/styleVariables';
-import {RootStackParamList} from '../store/generalStore';
+import {RootStackParamList, getIsAppLoading} from '../store/generalStore';
 import {componentNames} from '../store/layoutStore';
+import {useAppSelector} from '../store/store';
 
 export default function BottomNavBar({
   state,
@@ -20,6 +21,10 @@ export default function BottomNavBar({
   navigation,
   insets,
 }: BottomTabBarProps) {
+  const isAppLoading = useAppSelector(getIsAppLoading);
+
+  if (isAppLoading) return null;
+
   return (
     <SafeAreaView style={styles.container}>
       {state.routes.map((route, index) => {
@@ -37,6 +42,8 @@ export default function BottomNavBar({
           case 'Settings':
             icon = faGear;
             break;
+          case 'Loading':
+            return null;
           default:
             icon = faQuestion;
         }

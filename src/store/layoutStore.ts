@@ -25,6 +25,7 @@ interface LayoutState {
 
 export const componentNames = {
   netWorthScreen: 'NetWorthScreen',
+  loadingScreen: 'LoadingScreen',
   header: 'Header',
   subHeader: 'SubHeader',
   infoDisplay: 'InfoDisplay',
