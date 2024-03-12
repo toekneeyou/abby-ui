@@ -4,12 +4,7 @@ import {faAdd} from '@fortawesome/free-solid-svg-icons';
 
 import {colors, spacing} from '../styles/styleVariables';
 import IconButton from '../components/IconButton';
-import {
-  componentNames,
-  heights,
-  setLayout,
-  zIndices,
-} from '../store/layoutStore';
+import {heights, setLayout, zIndices} from '../store/layoutStore';
 import SubHeader from './SubHeader';
 import Logo from '../components/Logo';
 import {useAppSelector} from '../store/store';
@@ -54,8 +49,6 @@ export default function Header({}: HeaderProps) {
     </View>
   );
 }
-
-Header.name = componentNames.header;
 
 const styles = StyleSheet.create({
   header: {

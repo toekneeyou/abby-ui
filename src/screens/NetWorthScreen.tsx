@@ -13,11 +13,7 @@ import {colors, spacing} from '../styles/styleVariables';
 import AccountCard from '../features/AccountCard';
 import {accountData} from '../mockData/accountData';
 import {useAppDispatch} from '../store/store';
-import {
-  componentNames,
-  heights,
-  setIsSubHeaderShown,
-} from '../store/layoutStore';
+import {heights, setIsSubHeaderShown} from '../store/layoutStore';
 import {RootStackParamList, setCurrentRoute} from '../store/generalStore';
 
 type NetWorthScreenProps = BottomTabScreenProps<
@@ -56,8 +52,6 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
     </ScrollView>
   );
 }
-
-NetWorthScreen.name = componentNames.netWorthScreen;
 
 const styles = StyleSheet.create({
   netWorthScreen: {

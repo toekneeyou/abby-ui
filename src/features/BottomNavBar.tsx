@@ -12,7 +12,6 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 import {colors} from '../styles/styleVariables';
 import {RootStackParamList, getIsAppLoading} from '../store/generalStore';
-import {componentNames} from '../store/layoutStore';
 import {useAppSelector} from '../store/store';
 
 export default function BottomNavBar({
@@ -42,7 +41,7 @@ export default function BottomNavBar({
           case 'Settings':
             icon = faGear;
             break;
-          case 'Loading':
+          case 'Login':
             return null;
           default:
             icon = faQuestion;
@@ -65,8 +64,6 @@ export default function BottomNavBar({
     </SafeAreaView>
   );
 }
-
-BottomNavBar.name = componentNames.bottomNavBar;
 
 const styles = StyleSheet.create({
   container: {

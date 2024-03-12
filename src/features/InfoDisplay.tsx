@@ -6,7 +6,7 @@ import {faArrowUpLong} from '@fortawesome/free-solid-svg-icons';
 import {colors} from '../styles/styleVariables';
 import HeaderText from '../components/HeaderText';
 import BodyText from '../components/BodyText';
-import {componentNames, heights} from '../store/layoutStore';
+import {heights} from '../store/layoutStore';
 
 type InfoDisplayProps = {};
 
@@ -47,8 +47,6 @@ export default function InfoDisplay({}: InfoDisplayProps) {
     </Animated.View>
   );
 }
-
-InfoDisplay.name = componentNames.infoDisplay;
 
 const styles = StyleSheet.create({
   infoDisplay: {

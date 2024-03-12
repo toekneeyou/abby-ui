@@ -2,12 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet} from 'react-native';
 
 import {colors, spacing} from '../styles/styleVariables';
-import {
-  componentNames,
-  getIsSubHeaderShown,
-  heights,
-  zIndices,
-} from '../store/layoutStore';
+import {getIsSubHeaderShown, heights, zIndices} from '../store/layoutStore';
 import NetWorthSubHeader from './NetWorthScreenSubHeader';
 import {useAppSelector} from '../store/store';
 import {getCurrentRoute} from '../store/generalStore';
@@ -66,8 +61,6 @@ export default function SubHeader() {
     </Animated.View>
   );
 }
-
-SubHeader.name = componentNames.subHeader;
 
 const styles = StyleSheet.create({
   subHeader: {

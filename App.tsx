@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 
 import {store} from './src/store/store';
 import {RootStackParamList, initialState} from './src/store/generalStore';
-import LoadingScreen from './src/screens/LoadingScreen';
+import LoginScreen from './src/screens/LoginScreen';
 import NetWorthScreen from './src/screens/NetWorthScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
 import BottomNavBar from './src/features/BottomNavBar';
@@ -29,7 +29,7 @@ function App(): React.JSX.Element {
             screenOptions={{
               headerShown: false,
             }}>
-            <Tab.Screen name="Loading" component={LoadingScreen} />
+            <Tab.Screen name="Login" component={LoginScreen} />
             <Tab.Screen name="Net Worth" component={NetWorthScreen} />
             <Tab.Screen name="Transactions" component={TransactionsScreen} />
           </Tab.Navigator>
