@@ -12,6 +12,7 @@ import {
   zIndices,
 } from '../store/layoutStore';
 import SubHeader from './SubHeader';
+import Logo from '../components/Logo';
 
 type HeaderProps = {};
 
@@ -33,9 +34,7 @@ export default function Header({}: HeaderProps) {
           },
         ]}>
         <View style={styles.mainHeaderLeft}>
-          <HeaderText type="h3" style={{color: colors.eggplant[20]}}>
-            ABBY
-          </HeaderText>
+          <Logo width={70} />
         </View>
         <View style={styles.mainHeaderRight}>
           <IconButton
