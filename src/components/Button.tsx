@@ -6,11 +6,20 @@ import {IconProp} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 export type ButtonType = 'filled' | 'outlined' | 'text';
+export type ButtonColor =
+  | 'eggplant'
+  | 'gray'
+  | 'black'
+  | 'tomato'
+  | 'pistachio';
+export type ButtonSize = 'compact' | 'regular' | 'jumbo';
 
 type ButtonProps = PressableProps & {
   type?: ButtonType;
   label: string;
   icon?: IconProp;
+  color?: ButtonColor;
+  size?: ButtonSize;
 };
 
 export default function Button({
@@ -18,32 +27,64 @@ export default function Button({
   disabled = false,
   type = 'filled',
   icon,
+  color = 'eggplant',
+  size = 'regular',
   ...props
 }: ButtonProps) {
   let backgroundColor: string;
   let fontColor: string;
   let borderColor: string;
+  let height: number;
+  let fontSize;
+  let paddingHorizontal: number;
+  let paddingVertical: number;
 
   switch (type) {
     case 'filled':
-      backgroundColor = colors.eggplant[20];
+      backgroundColor = colors[color][20];
       fontColor = colors.white;
-      borderColor = colors.eggplant[20];
+      borderColor = colors[color][20];
       break;
     case 'outlined':
       backgroundColor = 'transparent';
-      fontColor = colors.eggplant[20];
-      borderColor = colors.eggplant[20];
+      fontColor = colors[color][20];
+      borderColor = colors[color][20];
       break;
     case 'text':
       backgroundColor = 'transparent';
-      fontColor = colors.eggplant[20];
+      fontColor = colors[color][20];
       borderColor = 'transparent';
       break;
     default:
-      backgroundColor = colors.eggplant[20];
+      backgroundColor = colors[color][20];
       fontColor = colors.white;
-      borderColor = colors.eggplant[20];
+      borderColor = colors[color][20];
+  }
+
+  switch (size) {
+    case 'compact':
+      height = 40;
+      fontSize = typography.b2;
+      paddingHorizontal = 10;
+      paddingVertical = 5;
+      break;
+    case 'regular':
+      height = 50;
+      fontSize = typography.b1;
+      paddingHorizontal = 20;
+      paddingVertical = 10;
+      break;
+    case 'jumbo':
+      height = 60;
+      fontSize = typography.b1;
+      paddingHorizontal = 20;
+      paddingVertical = 10;
+      break;
+    default:
+      height = 50;
+      fontSize = typography.b1;
+      paddingHorizontal = 20;
+      paddingVertical = 10;
   }
 
   return (
@@ -52,26 +93,31 @@ export default function Button({
       style={({pressed}) => {
         switch (type) {
           case 'filled':
-            backgroundColor = pressed
-              ? colors.eggplant[10]
-              : colors.eggplant[20];
+            backgroundColor = pressed ? colors[color][40] : colors[color][20];
             break;
           case 'outlined':
-            backgroundColor = pressed ? colors.eggplant[10] : 'transparent';
+            backgroundColor = pressed ? colors[color][40] : 'transparent';
             break;
           case 'text':
-            backgroundColor = pressed ? colors.eggplant[10] : 'transparent';
+            backgroundColor = pressed ? colors[color][40] : 'transparent';
             break;
           default:
-            backgroundColor = pressed
-              ? colors.eggplant[10]
-              : colors.eggplant[20];
+            backgroundColor = pressed ? colors[color][40] : colors[color][20];
         }
 
-        return [styles.button, {backgroundColor, borderColor}];
+        return [
+          styles.button,
+          {
+            backgroundColor,
+            borderColor,
+            height,
+            paddingHorizontal,
+            paddingVertical,
+          },
+        ];
       }}>
       {!!icon && <FontAwesomeIcon icon={icon} color={fontColor} />}
-      <Text style={[typography.b1, {color: fontColor, fontWeight: 'bold'}]}>
+      <Text style={[fontSize, {color: fontColor, fontWeight: 'bold'}]}>
         {label}
       </Text>
     </Pressable>
@@ -80,11 +126,8 @@ export default function Button({
 
 const styles = StyleSheet.create({
   button: {
-    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
     borderRadius: 25,
     borderWidth: 2,
     flexDirection: 'row',

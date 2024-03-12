@@ -60,9 +60,20 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
               isSecure={true}
             />
           </View>
-          <View>
+          <View style={styles.buttons}>
             <Button onPress={handleLogin} label="Login" />
+            <Button
+              type="text"
+              label="Forgot username/password?"
+              color="gray"
+              size="compact"
+            />
           </View>
+        </View>
+      )}
+      {!isAppLoading && (
+        <View style={{position: 'absolute', bottom: 25}}>
+          <Button type="text" label="Register" color="gray" size="compact" />
         </View>
       )}
     </View>
@@ -85,5 +96,8 @@ const styles = StyleSheet.create({
   inputs: {
     rowGap: 10,
     marginBottom: 15,
+  },
+  buttons: {
+    rowGap: 10,
   },
 });
