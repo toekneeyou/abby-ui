@@ -32,7 +32,7 @@ export default function Accordion({
 
   const toggleAccordon = () => {
     LayoutAnimation.configureNext(
-      LayoutAnimation.create(300, 'linear', 'opacity'),
+      LayoutAnimation.create(200, 'linear', 'opacity'),
     );
     setIsCollapsed(!isCollapsed);
   };
