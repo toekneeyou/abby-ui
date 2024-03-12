@@ -3,10 +3,10 @@ import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
+  faDollar,
   faGear,
   faHouse,
   faQuestion,
-  faRightLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
@@ -32,7 +32,7 @@ export default function BottomNavBar({
             icon = faHouse;
             break;
           case 'Transactions':
-            icon = faRightLeft;
+            icon = faDollar;
             break;
           case 'Settings':
             icon = faGear;
