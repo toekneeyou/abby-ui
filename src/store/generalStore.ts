@@ -42,7 +42,8 @@ export const generalSlice = createSlice({
   },
 });
 
-export const {setCurrentRoute, setIsAppLoading} = generalSlice.actions;
+export const {setCurrentRoute, setIsAppLoading, setIsAuthenticated} =
+  generalSlice.actions;
 
 export const getCurrentRoute = (state: RootState) => state.general.currentRoute;
 export const getIsAppLoading = (state: RootState) => state.general.isAppLoading;

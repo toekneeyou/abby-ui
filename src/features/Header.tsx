@@ -8,14 +8,15 @@ import {heights, setLayout, zIndices} from '../store/layoutStore';
 import SubHeader from './SubHeader';
 import Logo from '../components/Logo';
 import {useAppSelector} from '../store/store';
-import {getIsAppLoading} from '../store/generalStore';
+import {getIsAppLoading, getIsAuthenticated} from '../store/generalStore';
 
 type HeaderProps = {};
 
 export default function Header({}: HeaderProps) {
   const isAppLoading = useAppSelector(getIsAppLoading);
+  const isAuthenticated = useAppSelector(getIsAuthenticated);
 
-  if (isAppLoading) return null;
+  if (isAppLoading || !isAuthenticated) return null;
 
   const handleLayout = (e: LayoutChangeEvent) => {
     setLayout({

@@ -11,7 +11,11 @@ import {
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 import {colors} from '../styles/styleVariables';
-import {RootStackParamList, getIsAppLoading} from '../store/generalStore';
+import {
+  RootStackParamList,
+  getIsAppLoading,
+  getIsAuthenticated,
+} from '../store/generalStore';
 import {useAppSelector} from '../store/store';
 
 export default function BottomNavBar({
@@ -21,8 +25,9 @@ export default function BottomNavBar({
   insets,
 }: BottomTabBarProps) {
   const isAppLoading = useAppSelector(getIsAppLoading);
+  const isAuthenticated = useAppSelector(getIsAuthenticated);
 
-  if (isAppLoading) return null;
+  if (isAppLoading || !isAuthenticated) return null;
 
   return (
     <SafeAreaView style={styles.container}>
