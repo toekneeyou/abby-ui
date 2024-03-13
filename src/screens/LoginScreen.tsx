@@ -13,7 +13,7 @@ import Logo from '../components/Logo';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import {faSackDollar} from '@fortawesome/free-solid-svg-icons';
+import axios, {AxiosError} from 'axios';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
@@ -32,19 +32,44 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     }, 2000);
   }, []);
 
-  const handleLogin = () => {
-    dispatch(setIsAuthenticated(true));
-    navigation.navigate('Net Worth');
+  const handleLogin = async () => {
+    const data = {username, password};
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://192.168.1.121:3001/api/v1/auth/login',
+        data,
+      });
+
+      const {status} = response;
+
+      if (status === 200) {
+        dispatch(setIsAuthenticated(true));
+        navigation.navigate('Net Worth');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const {status, code, request, response} = error.toJSON() as AxiosError<
+          unknown,
+          unknown
+        >;
+        console.log(status, code, request, response);
+      }
+    }
   };
 
   return (
     <View style={styles.loginScreen}>
-      <View style={styles.logo}>
+      <View
+        style={[
+          styles.top,
+          {justifyContent: isAppLoading ? 'center' : 'flex-end'},
+        ]}>
         <Logo color={colors.white} width={125} height={40} />
       </View>
 
       {!isAppLoading && (
-        <View style={styles.loginForm}>
+        <View style={styles.middle}>
           <View style={styles.inputs}>
             <Input
               placeholder="Username"
@@ -61,7 +86,12 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
             />
           </View>
           <View style={styles.buttons}>
-            <Button onPress={handleLogin} label="Login" />
+            <Button
+              onPress={handleLogin}
+              label="Login"
+              disabled={!username || !password}
+              style={{width: 250}}
+            />
             <Button
               type="text"
               label="Forgot username/password?"
@@ -71,8 +101,9 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
           </View>
         </View>
       )}
+
       {!isAppLoading && (
-        <View style={{position: 'absolute', bottom: 25}}>
+        <View style={styles.bottom}>
           <Button type="text" label="Register" color="gray" size="compact" />
         </View>
       )}
@@ -88,11 +119,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logo: {
-    height: 50,
-    marginBottom: 10,
+  top: {
+    flex: 1,
+    alignItems: 'center',
   },
-  loginForm: {},
+  middle: {
+    justifyContent: 'center',
+    padding: 25,
+  },
   inputs: {
     rowGap: 10,
     marginBottom: 15,
@@ -100,4 +134,5 @@ const styles = StyleSheet.create({
   buttons: {
     rowGap: 10,
   },
+  bottom: {flex: 1, justifyContent: 'flex-end', paddingBottom: 25},
 });
