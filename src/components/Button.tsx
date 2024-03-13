@@ -41,24 +41,24 @@ export default function Button({
 
   switch (type) {
     case 'filled':
-      backgroundColor = colors[color][20];
-      fontColor = colors.white;
-      borderColor = colors[color][20];
+      backgroundColor = disabled ? colors.gray[40] : colors[color][20];
+      fontColor = disabled ? colors.gray[10] : colors.white;
+      borderColor = disabled ? colors.gray[40] : colors[color][20];
       break;
     case 'outlined':
       backgroundColor = 'transparent';
-      fontColor = colors[color][20];
-      borderColor = colors[color][20];
+      fontColor = disabled ? colors.gray[40] : colors[color][20];
+      borderColor = disabled ? colors.gray[40] : colors[color][20];
       break;
     case 'text':
       backgroundColor = 'transparent';
-      fontColor = colors[color][20];
+      fontColor = disabled ? colors.gray[40] : colors[color][20];
       borderColor = 'transparent';
       break;
     default:
-      backgroundColor = colors[color][20];
-      fontColor = colors.white;
-      borderColor = colors[color][20];
+      backgroundColor = disabled ? colors.gray[40] : colors[color][20];
+      fontColor = disabled ? colors.gray[10] : colors.white;
+      borderColor = disabled ? colors.gray[40] : colors[color][20];
   }
 
   switch (size) {
@@ -89,20 +89,27 @@ export default function Button({
 
   return (
     <Pressable
+      disabled={disabled}
       {...props}
       style={({pressed}) => {
-        switch (type) {
-          case 'filled':
-            backgroundColor = pressed ? colors[color][40] : colors[color][20];
-            break;
-          case 'outlined':
-            backgroundColor = pressed ? colors[color][40] : 'transparent';
-            break;
-          case 'text':
-            backgroundColor = pressed ? colors[color][40] : 'transparent';
-            break;
-          default:
-            backgroundColor = pressed ? colors[color][40] : colors[color][20];
+        if (!disabled) {
+          switch (type) {
+            case 'filled':
+              backgroundColor = pressed ? colors[color][40] : colors[color][20];
+              borderColor = pressed ? colors[color][40] : colors[color][20];
+              break;
+            case 'outlined':
+              backgroundColor = pressed ? colors[color][40] : 'transparent';
+              borderColor = pressed ? colors[color][40] : 'transparent';
+              break;
+            case 'text':
+              backgroundColor = pressed ? colors[color][40] : 'transparent';
+              borderColor = pressed ? colors[color][40] : 'transparent';
+              break;
+            default:
+              backgroundColor = pressed ? colors[color][40] : colors[color][20];
+              borderColor = pressed ? colors[color][40] : colors[color][20];
+          }
         }
 
         return [
