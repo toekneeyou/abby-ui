@@ -3,6 +3,7 @@ import {
   Animated,
   LayoutChangeEvent,
   LayoutRectangle,
+  Pressable,
   StyleSheet,
   TextInput,
   TextInputProps,
@@ -19,7 +20,7 @@ type InputProps = Omit<TextInputProps, 'secureTextEntry'> & {
 
 export default function Input({isSecure = false, ...props}: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
-  const [showInput, setShowInput] = useState(false);
+  const [showInput, setShowInput] = useState(!isSecure);
   const [layout, setLayout] = useState<LayoutRectangle>();
   const inputAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef<TextInput>(null);
@@ -36,6 +37,10 @@ export default function Input({isSecure = false, ...props}: InputProps) {
     setLayout(e.nativeEvent.layout);
   };
 
+  const focus = () => {
+    inputRef.current?.focus();
+  };
+
   useEffect(() => {
     Animated.timing(inputAnim, {
       toValue: isFocused ? 1 : 0,
@@ -45,7 +50,10 @@ export default function Input({isSecure = false, ...props}: InputProps) {
   }, [isFocused]);
 
   return (
-    <View style={[styles.inputContainer, props.style]} onLayout={handleLayout}>
+    <Pressable
+      style={[styles.inputContainer, props.style]}
+      onLayout={handleLayout}
+      onPress={focus}>
       <Animated.View
         style={[
           styles.shadow,
@@ -73,27 +81,27 @@ export default function Input({isSecure = false, ...props}: InputProps) {
         <TextInput
           onFocus={handleFocus}
           onBlur={handleBlur}
+          autoCapitalize="none"
           {...props}
           style={[typography.b1, styles.input]}
-          secureTextEntry={showInput}
+          secureTextEntry={!showInput}
           ref={inputRef}
+          placeholderTextColor={colors.gray[50]}
         />
         {isSecure && (
           <IconButton
-            icon={showInput ? faEye : faEyeSlash}
+            icon={showInput ? faEyeSlash : faEye}
             onPressHandler={() => {
               setIsFocused(true);
               setShowInput(!showInput);
-              if (inputRef.current) {
-                inputRef.current.focus();
-              }
+              focus();
             }}
             type="text"
             style={{transform: [{translateX: 10}]}}
           />
         )}
       </View>
-    </View>
+    </Pressable>
   );
 }
 
