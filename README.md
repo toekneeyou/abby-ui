@@ -9,6 +9,7 @@ This is the UI for Abby
 - [Usage](#usage)
   - [iOS Linkage](#ios-linkage)
   - [Asset Linkage](#asset-linkage)
+  - [Running Dev](#running-dev)
 
 ## Getting Started
 
@@ -27,22 +28,6 @@ This is the UI for Abby
    ```
 
 ## Usage
-
-### iOS Linkage
-
-Remember to update iOS dependencies whenever you install new libraries that include native modules with the following command:
-
-```bash
-npx pod-install ios
-```
-
-### Asset Linkage
-
-When you add assets, make sure to link the assets to iOS and Android with the following command:
-
-```bash
-npx react-native-asset
-```
 
 ### Running Dev
 
@@ -83,3 +68,21 @@ yarn ios
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+
+3. If you want to run the app on your own device, follow the instructions [here](https://reactnative.dev/docs/running-on-device)
+
+### iOS Linkage
+
+Remember to update iOS dependencies whenever you install new libraries that include native modules with the following command:
+
+```bash
+npx pod-install ios
+```
+
+### Asset Linkage
+
+When you add assets, make sure to link the assets to iOS and Android with the following command:
+
+```bash
+npx react-native-asset
+```
