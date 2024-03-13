@@ -1,7 +1,8 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   View,
@@ -23,6 +24,7 @@ type NetWorthScreenProps = BottomTabScreenProps<
 
 export default function NetWorthScreen({route}: NetWorthScreenProps) {
   const dispatch = useAppDispatch();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollY = e.nativeEvent.contentOffset.y;
@@ -38,11 +40,22 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
     dispatch(setCurrentRoute(route.name));
   }, []);
 
+  const handleRefresh = () => {
+    console.log('isRefreshing');
+  };
+
   return (
     <ScrollView
       onScroll={handleScroll}
       scrollEventThrottle={16}
-      style={styles.netWorthScreen}>
+      style={styles.netWorthScreen}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
+          style={{backgroundColor: colors.white}}
+        />
+      }>
       <InfoDisplay />
       <View style={[styles.accountCards]}>
         {accountData.map(account => {
