@@ -18,11 +18,7 @@ export default function Logo({
 </svg>
 `;
 
-  return (
-    <View style={styles.container}>
-      <SvgXml xml={svgContent} width={width} height={height} />
-    </View>
-  );
+  return <SvgXml xml={svgContent} width={width} height={height} />;
 }
 
 const styles = StyleSheet.create({
