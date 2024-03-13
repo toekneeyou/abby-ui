@@ -2,9 +2,6 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from './store';
 
-export type ComponentNames = typeof componentNames;
-export type ComponentName = keyof ComponentNames;
-
 export type Layout = {
   x?: number;
   y?: number;
@@ -18,25 +15,17 @@ export type Offset = {
 };
 
 interface LayoutState {
-  layouts: {[Name in ComponentName]?: Layout};
-  offsets: {[Name in ComponentName]?: Offset};
+  layouts: {[key: string]: Layout};
+  offsets: {[key: string]: Offset};
   isSubHeaderShown: boolean;
 }
 
-export const componentNames = {
-  netWorthScreen: 'NetWorthScreen',
-  header: 'Header',
-  subHeader: 'SubHeader',
-  infoDisplay: 'InfoDisplay',
-  bottomNavBar: 'BottomNavBar',
-};
-
-export const zIndices: {[Name in ComponentName]?: number} = {
+export const zIndices: {[key: string]: number} = {
   netWorthScreen: 0,
   header: 100,
   subHeader: 90,
 };
-export const heights: {[Name in ComponentName]?: number} = {
+export const heights: {[key: string]: number} = {
   header: 50,
   subHeader: 40,
   infoDisplay: 120,
@@ -54,7 +43,7 @@ export const layoutSlice = createSlice({
   reducers: {
     setLayout: (
       state,
-      action: PayloadAction<{name: ComponentName; layout: Layout}>,
+      action: PayloadAction<{name: string; layout: Layout}>,
     ) => {
       state.layouts[action.payload.name] = action.payload.layout;
     },
@@ -63,7 +52,7 @@ export const layoutSlice = createSlice({
     },
     setOffset: (
       state,
-      action: PayloadAction<{name: ComponentName; offset: Offset}>,
+      action: PayloadAction<{name: string; offset: Offset}>,
     ) => {
       state.offsets[action.payload.name] = action.payload.offset;
     },

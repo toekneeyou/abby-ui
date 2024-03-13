@@ -3,19 +3,21 @@ import {Animated, LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import {faAdd} from '@fortawesome/free-solid-svg-icons';
 
 import {colors, spacing} from '../styles/styleVariables';
-import HeaderText from '../components/HeaderText';
 import IconButton from '../components/IconButton';
-import {
-  componentNames,
-  heights,
-  setLayout,
-  zIndices,
-} from '../store/layoutStore';
+import {heights, setLayout, zIndices} from '../store/layoutStore';
 import SubHeader from './SubHeader';
+import Logo from '../components/Logo';
+import {useAppSelector} from '../store/store';
+import {getIsAppLoading, getIsAuthenticated} from '../store/generalStore';
 
 type HeaderProps = {};
 
 export default function Header({}: HeaderProps) {
+  const isAppLoading = useAppSelector(getIsAppLoading);
+  const isAuthenticated = useAppSelector(getIsAuthenticated);
+
+  if (isAppLoading || !isAuthenticated) return null;
+
   const handleLayout = (e: LayoutChangeEvent) => {
     setLayout({
       name: 'header',
@@ -33,9 +35,7 @@ export default function Header({}: HeaderProps) {
           },
         ]}>
         <View style={styles.mainHeaderLeft}>
-          <HeaderText type="h3" style={{color: colors.eggplant[20]}}>
-            ABBY
-          </HeaderText>
+          <Logo width={70} />
         </View>
         <View style={styles.mainHeaderRight}>
           <IconButton
@@ -50,8 +50,6 @@ export default function Header({}: HeaderProps) {
     </View>
   );
 }
-
-Header.name = componentNames.header;
 
 const styles = StyleSheet.create({
   header: {

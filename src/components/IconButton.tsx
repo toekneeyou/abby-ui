@@ -1,11 +1,16 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 
 import {colors} from '../styles/styleVariables';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
+import {ButtonType} from './Button';
 
-type IconButtonTypes = 'filled' | 'outlined' | 'text';
+type IconButtonTypes = ButtonType;
 
 export type IconButtonProps = {
   color?: string;
@@ -13,6 +18,7 @@ export type IconButtonProps = {
   label?: string;
   type?: IconButtonTypes;
   onPressHandler: (arg?: any) => void;
+  style?: TouchableOpacityProps['style'];
 };
 
 const returnColor = (type: IconButtonTypes, color?: string) => {
@@ -49,6 +55,7 @@ export default function IconButton({
   icon,
   label,
   type = 'filled',
+  style,
   onPressHandler,
 }: IconButtonProps): React.JSX.Element {
   const {backgroundColor, borderColor, iconColor} = returnColor(type, color);
@@ -61,6 +68,7 @@ export default function IconButton({
           backgroundColor,
           borderColor,
         },
+        style,
       ]}
       onPress={onPressHandler}
       accessible={true}

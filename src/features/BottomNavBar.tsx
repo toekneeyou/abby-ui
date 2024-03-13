@@ -1,18 +1,22 @@
 import React from 'react';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import {SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
+  faDollar,
   faGear,
   faHouse,
   faQuestion,
-  faRightLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 
 import {colors} from '../styles/styleVariables';
-import {RootStackParamList} from '../store/generalStore';
-import {componentNames} from '../store/layoutStore';
+import {
+  RootStackParamList,
+  getIsAppLoading,
+  getIsAuthenticated,
+} from '../store/generalStore';
+import {useAppSelector} from '../store/store';
 
 export default function BottomNavBar({
   state,
@@ -20,6 +24,11 @@ export default function BottomNavBar({
   navigation,
   insets,
 }: BottomTabBarProps) {
+  const isAppLoading = useAppSelector(getIsAppLoading);
+  const isAuthenticated = useAppSelector(getIsAuthenticated);
+
+  if (isAppLoading || !isAuthenticated) return null;
+
   return (
     <SafeAreaView style={styles.container}>
       {state.routes.map((route, index) => {
@@ -32,11 +41,13 @@ export default function BottomNavBar({
             icon = faHouse;
             break;
           case 'Transactions':
-            icon = faRightLeft;
+            icon = faDollar;
             break;
           case 'Settings':
             icon = faGear;
             break;
+          case 'Login':
+            return null;
           default:
             icon = faQuestion;
         }
@@ -58,8 +69,6 @@ export default function BottomNavBar({
     </SafeAreaView>
   );
 }
-
-BottomNavBar.name = componentNames.bottomNavBar;
 
 const styles = StyleSheet.create({
   container: {
