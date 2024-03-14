@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {LayoutAnimation, StyleSheet, Text, View} from 'react-native';
+import {API_URL} from '@env';
 
 import {
   RootStackParamList,
@@ -14,6 +15,7 @@ import {useAppDispatch, useAppSelector} from '../store/store';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import axios, {AxiosError} from 'axios';
+import {login} from '../services/apiService';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
@@ -33,13 +35,8 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   }, []);
 
   const handleLogin = async () => {
-    const data = {username, password};
     try {
-      const response = await axios({
-        method: 'post',
-        url: 'http://192.168.1.121:3001/api/v1/auth/login',
-        data,
-      });
+      const response = await login({username, password});
 
       const {status} = response;
 

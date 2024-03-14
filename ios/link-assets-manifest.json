@@ -98,6 +98,14 @@
       "sha1": "cc79d5a23bd0ec08b1d99f5390bf33cacc3082f4"
     },
     {
+      "path": "assets/images/darkicon_120x120.png",
+      "sha1": "951bb8fdad2e3fa225adaa6e7f937c3182d3ed15"
+    },
+    {
+      "path": "assets/images/darkicon_180x180.png",
+      "sha1": "7d3f8c5047e04ad1561c4828a8d7654cfaa2523e"
+    },
+    {
       "path": "assets/images/logo.svg",
       "sha1": "ca762b766b2f33e0b2a5e33494c4a22e4145b9f4"
     },
