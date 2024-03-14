@@ -23,8 +23,15 @@ This is the UI for Abby
    Make sure you have completed the [React Native - Environment Setup (React Native CLI Quickstart)](https://reactnative.dev/docs/environment-setup?guide=native) instructions till "Creating a new application" step, before proceeding.
 
 3. Install Dependencies
+
    ```bash
    npm i
+   ```
+
+4. Set up environmental variables. Use `.env` for variables that aren't dependent on your development environment. Use `.env.development` for `development` environment `.env.production` for `production` environment.
+
+   ```
+   API_URL
    ```
 
 ## Usage
