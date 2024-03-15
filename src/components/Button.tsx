@@ -41,24 +41,24 @@ export default function Button({
 
   switch (type) {
     case 'filled':
-      backgroundColor = disabled ? colors.gray[40] : colors[color][20];
+      backgroundColor = disabled ? colors.gray[40] : colors[color][30];
       fontColor = disabled ? colors.gray[10] : colors.white;
-      borderColor = disabled ? colors.gray[40] : colors[color][20];
+      borderColor = disabled ? colors.gray[40] : colors[color][30];
       break;
     case 'outlined':
       backgroundColor = 'transparent';
-      fontColor = disabled ? colors.gray[40] : colors[color][20];
-      borderColor = disabled ? colors.gray[40] : colors[color][20];
+      fontColor = disabled ? colors.gray[40] : colors[color][30];
+      borderColor = disabled ? colors.gray[40] : colors[color][30];
       break;
     case 'text':
       backgroundColor = 'transparent';
-      fontColor = disabled ? colors.gray[40] : colors[color][20];
+      fontColor = disabled ? colors.gray[40] : colors[color][30];
       borderColor = 'transparent';
       break;
     default:
-      backgroundColor = disabled ? colors.gray[40] : colors[color][20];
+      backgroundColor = disabled ? colors.gray[40] : colors[color][30];
       fontColor = disabled ? colors.gray[10] : colors.white;
-      borderColor = disabled ? colors.gray[40] : colors[color][20];
+      borderColor = disabled ? colors.gray[40] : colors[color][30];
   }
 
   switch (size) {
@@ -95,20 +95,21 @@ export default function Button({
         if (!disabled) {
           switch (type) {
             case 'filled':
-              backgroundColor = pressed ? colors[color][40] : colors[color][20];
-              borderColor = pressed ? colors[color][40] : colors[color][20];
+              backgroundColor = pressed ? colors[color][40] : colors[color][30];
+              borderColor = pressed ? colors[color][40] : colors[color][30];
               break;
             case 'outlined':
               backgroundColor = pressed ? colors[color][40] : 'transparent';
               borderColor = pressed ? colors[color][40] : 'transparent';
               break;
             case 'text':
-              backgroundColor = pressed ? colors[color][40] : 'transparent';
-              borderColor = pressed ? colors[color][40] : 'transparent';
+              fontColor = pressed ? colors[color][40] : colors[color][30];
+              // backgroundColor = pressed ? colors[color][40] : 'transparent';
+              // borderColor = pressed ? colors[color][40] : 'transparent';
               break;
             default:
-              backgroundColor = pressed ? colors[color][40] : colors[color][20];
-              borderColor = pressed ? colors[color][40] : colors[color][20];
+              backgroundColor = pressed ? colors[color][40] : colors[color][30];
+              borderColor = pressed ? colors[color][40] : colors[color][30];
           }
         }
 
