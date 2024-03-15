@@ -1,21 +1,22 @@
 import {useEffect, useState} from 'react';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {LayoutAnimation, StyleSheet, Text, View} from 'react-native';
-import {API_URL} from '@env';
+import axios, {AxiosError} from 'axios';
 
 import {
   RootStackParamList,
   getIsAppLoading,
   setIsAppLoading,
   setIsAuthenticated,
-} from '../store/generalStore';
-import {colors} from '../styles/styleVariables';
-import Logo from '../components/Logo';
-import {useAppDispatch, useAppSelector} from '../store/store';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import axios, {AxiosError} from 'axios';
-import {login} from '../services/apiService';
+} from '@store/generalStore';
+import {colors} from '@styles/styleVariables';
+import Logo from '@components/Logo';
+import {useAppDispatch, useAppSelector} from '@store/store';
+import Input from '@components/Input';
+import Button from '@components/Button';
+import {login} from '@services/apiService';
+import {typography} from '@styles/globalStyles';
+import {setUser} from '@store/userStore';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
@@ -24,6 +25,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   const dispatch = useAppDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<AxiosError<any, any> | Error>();
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,22 +37,42 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   }, []);
 
   const handleLogin = async () => {
+    if (!username && !password) {
+      setError(new Error('Both fields are empty, you dumbass!'));
+      return;
+    }
+    if (!username) {
+      setError(new Error('You forgot your username, idiot!'));
+      return;
+    }
+
+    if (!password) {
+      setError(new Error('WTF is your password?'));
+      return;
+    }
+
     try {
       const response = await login({username, password});
-
-      const {status} = response;
+      const {status, data} = response;
 
       if (status === 200) {
+        setUser(data);
+
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const {status, code, request, response} = error.toJSON() as AxiosError<
-          unknown,
-          unknown
-        >;
-        console.log(status, code, request, response);
+        const {status} = error.toJSON() as AxiosError<unknown, unknown>;
+        switch (status) {
+          case 401:
+            error.message = 'You fucked up!';
+            break;
+          default:
+            error.message = `Okay, this one's on us. Try again.`;
+        }
+
+        setError(error);
       }
     }
   };
@@ -73,6 +95,8 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
               value={username}
               onChangeText={setUsername}
               style={{width: 250}}
+              selectTextOnFocus={false}
+              textContentType="username"
             />
             <Input
               placeholder="Password"
@@ -80,15 +104,33 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
               onChangeText={setPassword}
               style={{width: 250}}
               isSecure={true}
+              selectTextOnFocus={false}
+              textContentType="password"
             />
           </View>
           <View style={styles.buttons}>
+            {!!error && (
+              <Text
+                style={[
+                  typography.b2,
+                  {
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    color: colors.tomato[10],
+                    width: 250,
+                  },
+                ]}>
+                {error.message}
+              </Text>
+            )}
+
             <Button
+              color={'pistachio'}
               onPress={handleLogin}
               label="Login"
-              disabled={!username || !password}
               style={{width: 250}}
             />
+
             <Button
               type="text"
               label="Forgot username/password?"
