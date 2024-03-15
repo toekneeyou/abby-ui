@@ -1,11 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
+  GestureResponderEvent,
   LayoutChangeEvent,
   LayoutRectangle,
+  NativeSyntheticEvent,
   Pressable,
   StyleSheet,
   TextInput,
+  TextInputFocusEventData,
   TextInputProps,
   View,
 } from 'react-native';
@@ -16,16 +19,18 @@ import IconButton from './IconButton';
 
 type InputProps = Omit<TextInputProps, 'secureTextEntry'> & {
   isSecure?: boolean;
+  error?: Error;
 };
 
-export default function Input({isSecure = false, ...props}: InputProps) {
+export default function Input({isSecure = false, error, ...props}: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [showInput, setShowInput] = useState(!isSecure);
   const [layout, setLayout] = useState<LayoutRectangle>();
   const inputAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef<TextInput>(null);
 
-  const handleFocus = () => {
+  const handleFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    e.stopPropagation();
     setIsFocused(true);
   };
 
@@ -37,8 +42,11 @@ export default function Input({isSecure = false, ...props}: InputProps) {
     setLayout(e.nativeEvent.layout);
   };
 
-  const focus = () => {
-    inputRef.current?.focus();
+  const focus = (e?: GestureResponderEvent) => {
+    e?.stopPropagation();
+    if (!isFocused) {
+      inputRef.current?.focus();
+    }
   };
 
   useEffect(() => {
@@ -91,10 +99,12 @@ export default function Input({isSecure = false, ...props}: InputProps) {
         {isSecure && (
           <IconButton
             icon={showInput ? faEyeSlash : faEye}
-            onPressHandler={() => {
+            onPressHandler={e => {
               setIsFocused(true);
               setShowInput(!showInput);
-              focus();
+              if (!isFocused) {
+                focus(e);
+              }
             }}
             type="text"
             style={{transform: [{translateX: 10}]}}
