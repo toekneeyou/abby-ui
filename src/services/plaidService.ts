@@ -14,12 +14,12 @@ export const createLinkToken: (
   userId: number,
 ) => Promise<string> = async userId => {
   if (isDev()) {
-    console.log(`${API_URL}/api/v1/plaid/createLinkToken`);
+    console.log(`${API_URL}/api/v1/plaid/linkToken`);
   }
   try {
     const response = await axios({
       method: 'post',
-      url: `${API_URL}/api/v1/plaid/createLinkToken`,
+      url: `${API_URL}/api/v1/plaid/linkToken`,
       data: {userId},
     });
 
@@ -31,7 +31,7 @@ export const createLinkToken: (
 };
 
 export type FetchAccessTokenRequest = {
-  userId: string;
+  userId: number;
   publicToken: string;
 };
 /**
@@ -41,13 +41,13 @@ export const fetchAccessToken: (
   getAccessTokenRequest: FetchAccessTokenRequest,
 ) => Promise<User> = async getAccessTokenRequest => {
   if (isDev()) {
-    console.log(`${API_URL}/api/v1/plaid/fetchAccessToken`);
+    console.log(`${API_URL}/api/v1/plaid/accessToken`);
   }
 
   try {
     const response = await axios({
       method: 'post',
-      url: `${API_URL}/api/v1/plaid/fetchAccessToken`,
+      url: `${API_URL}/api/v1/plaid/accessToken`,
       data: getAccessTokenRequest,
     });
     return response.data;
@@ -58,7 +58,7 @@ export const fetchAccessToken: (
 };
 
 export type FetchBalanceRequest = {
-  userId: string;
+  userId: number;
   accessToken: string;
 };
 /**
@@ -70,13 +70,13 @@ export const fetchBalance: ({
   userId,
 }: FetchBalanceRequest) => Promise<User> = async getBalanceRequest => {
   if (isDev()) {
-    console.log(`${API_URL}/api/v1/plaid/fetchBalance`);
+    console.log(`${API_URL}/api/v1/plaid/balance`);
   }
 
   try {
     const response = await axios({
       method: 'post',
-      url: `${API_URL}/api/v1/plaid/fetchBalance`,
+      url: `${API_URL}/api/v1/plaid/balance`,
       data: getBalanceRequest,
     });
     return response.data;
