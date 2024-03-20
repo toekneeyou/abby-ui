@@ -12,10 +12,25 @@ import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import InfoDisplay from '../features/InfoDisplay';
 import {colors, spacing} from '../styles/styleVariables';
 import AccountCard from '../features/AccountCard';
-import {accountData} from '../mockData/accountData';
-import {useAppDispatch} from '../store/store';
+import {useAppDispatch, useAppSelector} from '../store/store';
 import {heights, setIsSubHeaderShown} from '../store/layoutStore';
-import {RootStackParamList, setCurrentRoute} from '../store/generalStore';
+import {
+  RootStackParamList,
+  setCurrentRoute,
+  setError,
+} from '../store/generalStore';
+import {
+  AccountType,
+  getAccounts,
+  getInstitutions,
+  setAccounts,
+  setInstitutions,
+} from '@store/financialDataStore';
+import {getUser} from '@store/userStore';
+import {fetchAccounts, fetchInstitutions} from '@services/databaseService';
+import {isDev, organizeAccountsResponseByCategory} from '@services/helper';
+import {AxiosError} from 'axios';
+import {FetchBalanceRequest, fetchBalance} from '@services/plaidService';
 
 type NetWorthScreenProps = BottomTabScreenProps<
   RootStackParamList,
@@ -24,7 +39,10 @@ type NetWorthScreenProps = BottomTabScreenProps<
 
 export default function NetWorthScreen({route}: NetWorthScreenProps) {
   const dispatch = useAppDispatch();
+  const accounts = useAppSelector(getAccounts);
+  const institutions = useAppSelector(getInstitutions);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const user = useAppSelector(getUser);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollY = e.nativeEvent.contentOffset.y;
@@ -40,8 +58,29 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
     dispatch(setCurrentRoute(route.name));
   }, []);
 
-  const handleRefresh = () => {
-    console.log('isRefreshing');
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    if (isDev()) {
+      console.log('handleRefresh');
+    }
+
+    try {
+      const promises = institutions.map(i => {
+        const fetchBalanceRequest: FetchBalanceRequest = {
+          accessToken: i.plaidAccessToken,
+          userId: user?.id as number,
+        };
+        return fetchBalance(fetchBalanceRequest);
+      });
+
+      const accountsResponse = await Promise.all(promises);
+      const newAccounts = organizeAccountsResponseByCategory(accountsResponse);
+      dispatch(setAccounts(newAccounts));
+    } catch (error) {
+      setError(error as AxiosError);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   return (
@@ -58,8 +97,10 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
       }>
       <InfoDisplay />
       <View style={[styles.accountCards]}>
-        {accountData.map(account => {
-          return <AccountCard key={account.category} item={account} />;
+        {Object.entries(accounts).map(([type, a]) => {
+          return (
+            <AccountCard key={type} type={type as AccountType} accounts={a} />
+          );
         })}
       </View>
     </ScrollView>

@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {LayoutAnimation, Modal, StyleSheet, Text, View} from 'react-native';
+import {LayoutAnimation, StyleSheet, Text, View} from 'react-native';
 import axios, {AxiosError} from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   RootStackParamList,
@@ -18,6 +19,14 @@ import {LoginRequest, login} from '@services/authenticationService';
 import {typography} from '@styles/globalStyles';
 import {setLinkToken, setUser} from '@store/userStore';
 import {createLinkToken} from '@services/plaidService';
+import {
+  accountsStorageKey,
+  institutionsStorageKey,
+  setAccounts,
+  setInstitutions,
+  setTransactions,
+  transactionsStorageKey,
+} from '@store/financialDataStore';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
@@ -68,6 +77,24 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         if (linkToken) {
           dispatch(setLinkToken(linkToken));
         }
+        // load saved accounts into redux
+        const accounts = await AsyncStorage.getItem(accountsStorageKey);
+        if (accounts) {
+          dispatch(setAccounts(JSON.parse(accounts)));
+        }
+        // load saved institutions into redux
+        const institutions = await AsyncStorage.getItem(institutionsStorageKey);
+        if (institutions) {
+          const parsedInstitutions = JSON.parse(institutions);
+          dispatch(setInstitutions(parsedInstitutions));
+        }
+        // load saved transactions into redux
+        const transactions = await AsyncStorage.getItem(transactionsStorageKey);
+        if (transactions) {
+          const parsedTransactions = JSON.parse(transactions);
+          dispatch(setTransactions(parsedTransactions));
+        }
+
         // authenticate user and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');

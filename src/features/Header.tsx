@@ -79,7 +79,7 @@ export default function Header({}: HeaderProps) {
             tokenConfig={{token: linkToken as string, noLoadingState: true}}
             onSuccess={handleSuccess}
             onExit={handleExit}>
-            <FontAwesomeIcon icon={faAdd} />
+            <FontAwesomeIcon icon={faAdd} color={colors.eggplant[20]} />
           </PlaidLink>
         </View>
       </Animated.View>

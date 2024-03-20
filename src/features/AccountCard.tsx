@@ -1,12 +1,21 @@
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 
 import {borders, colors} from '../styles/styleVariables';
 import Sofi from '../../assets/images/sofi.jpeg';
 import {typography} from '../styles/globalStyles';
 import Accordion from '../components/Accordion';
+import {Account, AccountType} from '@store/financialDataStore';
+import {
+  faArrowTrendUp,
+  faCreditCard,
+  faFileSignature,
+  faOtter,
+  faSackDollar,
+} from '@fortawesome/free-solid-svg-icons';
+import {returnCurrency} from '@services/helper';
 
 type AccountCardItem = {
   category: string;
@@ -23,27 +32,56 @@ type AccountCardAccount = {
 };
 
 type AccountCardHeaderProps = {
-  item: AccountCardItem;
+  type: AccountType;
+  balance: number;
 };
 
-function AccountCardHeader({item}: AccountCardHeaderProps) {
+function AccountCardHeader({type, balance}: AccountCardHeaderProps) {
+  const [icon, setIcon] = useState<IconProp>(faOtter);
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    switch (type) {
+      case 'depository':
+        setIcon(faSackDollar);
+        setTitle('Cash');
+        break;
+      case 'credit':
+        setIcon(faCreditCard);
+        setTitle('Credit Cards');
+        break;
+      case 'investment':
+        setIcon(faArrowTrendUp);
+        setTitle('Investments');
+        break;
+      case 'loan':
+        setIcon(faFileSignature);
+        setTitle('Loans');
+        break;
+      case 'other':
+      default:
+        setIcon(faOtter);
+        setTitle('Other');
+    }
+  }, [type]);
+
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
-        <FontAwesomeIcon icon={item.icon} color={colors.eggplant[50]} />
-        <Text style={[typography.b1, {fontWeight: 'bold'}]}>
-          {item.category}
-        </Text>
+        <FontAwesomeIcon icon={icon} color={colors.eggplant[50]} />
+        <Text style={[typography.b1, {fontWeight: 'bold'}]}>{title}</Text>
       </View>
       <View style={styles.headerRight}>
-        <Text style={[typography.b1, {fontWeight: 'bold'}]}>{item.value}</Text>
+        <Text style={[typography.b1, {fontWeight: 'bold'}]}>
+          {returnCurrency(balance)}
+        </Text>
       </View>
     </View>
   );
 }
 
 type AccountCardItemProps = {
-  account: AccountCardAccount;
+  account: Account;
   isLast: boolean;
 };
 
@@ -58,37 +96,49 @@ function AccountCardItem({account, isLast}: AccountCardItemProps) {
           />
         </View>
         <View style={styles.itemLeftInfo}>
-          <Text style={typography.b1}>{account.name}</Text>
+          <Text style={typography.b1}>{account.plaidName}</Text>
           <Text style={[typography.b2, {color: colors.gray[50]}]}>
-            {account.type}
+            {account.plaidSubType}
           </Text>
         </View>
       </View>
       <View style={styles.itemRight}>
-        <Text style={typography.b1}>{account.value}</Text>
-        <Text style={[typography.b2, {color: colors.gray[50]}]}>
-          {account.syncTime}
+        <Text style={typography.b1}>
+          {returnCurrency(account.plaidCurrentBalance)}
         </Text>
+        {/* <Text style={[typography.b2, {color: colors.gray[50]}]}>
+          {account.lastSync}
+        </Text> */}
       </View>
     </View>
   );
 }
 
 type AccountCardProps = {
-  item: AccountCardItem;
+  accounts: Account[];
+  type: AccountType;
 };
 
-export default function AccountCard({item}: AccountCardProps) {
+export default function AccountCard({type, accounts}: AccountCardProps) {
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const newBalance = accounts.reduce((p, c) => {
+      return p + (c.plaidCurrentBalance ?? 0);
+    }, 0);
+    setBalance(newBalance);
+  }, [accounts]);
+
   return (
     <Accordion
-      header={<AccountCardHeader item={item} />}
+      header={<AccountCardHeader type={type} balance={balance} />}
       initialIsCollapsed={false}>
-      {item.accounts.map((account, index) => {
-        const isLast = index === item.accounts.length - 1;
+      {accounts.map((account, index) => {
+        const isLast = index === accounts.length - 1;
         return (
           <AccountCardItem
             account={account}
-            key={`${account.name}${account.value}`}
+            key={`${account.plaidName}${account.plaidCurrentBalance}`}
             isLast={isLast}
           />
         );
