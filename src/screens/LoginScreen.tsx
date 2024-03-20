@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {LayoutAnimation, StyleSheet, Text, View} from 'react-native';
+import {LayoutAnimation, Modal, StyleSheet, Text, View} from 'react-native';
 import axios, {AxiosError} from 'axios';
 
 import {
@@ -14,18 +14,22 @@ import Logo from '@components/Logo';
 import {useAppDispatch, useAppSelector} from '@store/store';
 import Input from '@components/Input';
 import Button from '@components/Button';
-import {login} from '@services/apiService';
+import {LoginRequest, login} from '@services/authenticationService';
 import {typography} from '@styles/globalStyles';
-import {setUser} from '@store/userStore';
+import {setLinkToken, setUser} from '@store/userStore';
+import {createLinkToken} from '@services/plaidService';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({navigation, route}: LoginScreenProps) {
-  const isAppLoading = useAppSelector(getIsAppLoading);
   const dispatch = useAppDispatch();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [error, setError] = useState<AxiosError<any, any> | Error>();
+
+  const isAppLoading = useAppSelector(getIsAppLoading);
 
   useEffect(() => {
     setTimeout(() => {
@@ -37,29 +41,38 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   }, []);
 
   const handleLogin = async () => {
+    setIsLoggingIn(true);
     if (!username && !password) {
-      setError(new Error('Both fields are empty, you dumbass!'));
+      setError(new AxiosError('Both fields are empty, you dumbass!'));
       return;
     }
     if (!username) {
-      setError(new Error('You forgot your username, idiot!'));
+      setError(new AxiosError('You forgot your username, idiot!'));
       return;
     }
 
     if (!password) {
-      setError(new Error('WTF is your password?'));
+      setError(new AxiosError('WTF is your password?'));
       return;
     }
 
     try {
-      const response = await login({username, password});
-      const {status, data} = response;
+      const loginRequest: LoginRequest = {username, password};
+      const user = await login(loginRequest);
 
-      if (status === 200) {
-        setUser(data);
-
+      if (user) {
+        // save user into store
+        dispatch(setUser(user));
+        // create linkToken
+        const linkToken = await createLinkToken(user.id);
+        if (linkToken) {
+          dispatch(setLinkToken(linkToken));
+        }
+        // authenticate user and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
+      } else {
+        setError(new AxiosError('Not sure what happened here. Try again.'));
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -74,6 +87,8 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
 
         setError(error);
       }
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -129,6 +144,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
               onPress={handleLogin}
               label="Login"
               style={{width: 250}}
+              isLoading={isLoggingIn}
             />
 
             <Button
