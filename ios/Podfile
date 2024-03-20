@@ -52,4 +52,6 @@ target 'AbbyUI' do
       :mac_catalyst_enabled => false
     )
   end
+
+  pod 'Plaid', '~> 5.0.0'
 end
