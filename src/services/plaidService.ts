@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import {User} from '@store/userStore';
 import {isDev} from './helper';
+import {Account} from '@store/financialDataStore';
 
 export type CreateLinkTokenRequest = {
   userId: string;
@@ -68,7 +69,7 @@ export type FetchBalanceRequest = {
 export const fetchBalance: ({
   accessToken,
   userId,
-}: FetchBalanceRequest) => Promise<User> = async getBalanceRequest => {
+}: FetchBalanceRequest) => Promise<Account[]> = async getBalanceRequest => {
   if (isDev()) {
     console.log(`${API_URL}/api/v1/plaid/balance`);
   }

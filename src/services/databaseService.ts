@@ -51,7 +51,7 @@ export const fetchAccounts: (
       url: `${API_URL}/api/v1/accounts/all`,
       data: fetchAccountsRequest,
     });
-    return response.data.accounts;
+    return response.data;
   } catch (error) {
     console.error('fetchAccounts', error);
     throw error;

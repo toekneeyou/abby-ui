@@ -8,8 +8,6 @@ import {RootStackParamList} from './src/store/generalStore';
 import StyledSafeAreaView from './src/features/StyledSafeAreaView';
 import AuthNavContainer from '@features/AuthFlow';
 
-const Tab = createBottomTabNavigator<RootStackParamList>();
-
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
