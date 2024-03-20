@@ -9,16 +9,22 @@ export type RootStackParamList = {
   Settings: undefined;
 };
 
+export type AbbyEnvironment = 'development' | 'production';
+
 interface GeneralState {
   currentRoute: keyof RootStackParamList;
   isAppLoading: boolean;
   isAuthenticated: boolean;
+  env: AbbyEnvironment;
+  error: Error | undefined;
 }
 
 export const initialState: GeneralState = {
   currentRoute: 'Login',
   isAppLoading: true,
   isAuthenticated: false,
+  env: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  error: undefined,
 };
 
 export const generalSlice = createSlice({
@@ -39,15 +45,20 @@ export const generalSlice = createSlice({
     setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
+    setError: (state, action: PayloadAction<Error | undefined>) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const {setCurrentRoute, setIsAppLoading, setIsAuthenticated} =
+export const {setCurrentRoute, setIsAppLoading, setIsAuthenticated, setError} =
   generalSlice.actions;
 
 export const getCurrentRoute = (state: RootState) => state.general.currentRoute;
 export const getIsAppLoading = (state: RootState) => state.general.isAppLoading;
 export const getIsAuthenticated = (state: RootState) =>
   state.general.isAuthenticated;
+export const getEnv = (state: RootState) => state.general.env;
+export const getError = (state: RootState) => state.general.error;
 
 export default generalSlice.reducer;
