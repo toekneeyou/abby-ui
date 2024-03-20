@@ -26,7 +26,10 @@ interface UserState {
   linkToken: string | undefined;
 }
 
-export const initialState: UserState = {user: undefined, linkToken: undefined};
+export const initialState: UserState = {
+  user: undefined,
+  linkToken: undefined,
+};
 
 export const userSlice = createSlice({
   name: 'user',
