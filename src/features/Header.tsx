@@ -1,20 +1,38 @@
 import React from 'react';
 import {Animated, LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import {faAdd} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import PlaidLink, {LinkExit, LinkSuccess} from 'react-native-plaid-link-sdk';
+import {AxiosError} from 'axios';
 
 import {colors, spacing} from '../styles/styleVariables';
-import IconButton from '../components/IconButton';
 import {heights, setLayout, zIndices} from '../store/layoutStore';
 import SubHeader from './SubHeader';
 import Logo from '../components/Logo';
-import {useAppSelector} from '../store/store';
-import {getIsAppLoading, getIsAuthenticated} from '../store/generalStore';
+import {useAppDispatch, useAppSelector} from '../store/store';
+import {
+  getError,
+  getIsAppLoading,
+  getIsAuthenticated,
+  setError,
+} from '../store/generalStore';
+import {getLinkToken, getUser, setUser} from '@store/userStore';
+import {
+  FetchAccessTokenRequest,
+  fetchAccessToken,
+} from '@services/plaidService';
+import {isDev} from '@services/helper';
 
 type HeaderProps = {};
 
 export default function Header({}: HeaderProps) {
+  const dispatch = useAppDispatch();
+
   const isAppLoading = useAppSelector(getIsAppLoading);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
+  const linkToken = useAppSelector(getLinkToken);
+  const user = useAppSelector(getUser);
+  const error = useAppSelector(getError);
 
   if (isAppLoading || !isAuthenticated) return null;
 
@@ -23,6 +41,25 @@ export default function Header({}: HeaderProps) {
       name: 'header',
       layout: e.nativeEvent.layout,
     });
+  };
+
+  const handleSuccess = async (success: LinkSuccess) => {
+    try {
+      const request: FetchAccessTokenRequest = {
+        userId: user?.id as number,
+        publicToken: success.publicToken,
+      };
+      const updatedUser = await fetchAccessToken(request);
+      dispatch(setUser(updatedUser));
+    } catch (error) {
+      dispatch(setError(error as AxiosError));
+    }
+  };
+
+  const handleExit = async (exit: LinkExit) => {
+    if (isDev()) {
+      console.log('exit', exit);
+    }
   };
 
   return (
@@ -38,11 +75,12 @@ export default function Header({}: HeaderProps) {
           <Logo width={70} />
         </View>
         <View style={styles.mainHeaderRight}>
-          <IconButton
-            icon={faAdd}
-            type="text"
-            onPressHandler={() => console.log('add')}
-          />
+          <PlaidLink
+            tokenConfig={{token: linkToken as string, noLoadingState: true}}
+            onSuccess={handleSuccess}
+            onExit={handleExit}>
+            <FontAwesomeIcon icon={faAdd} />
+          </PlaidLink>
         </View>
       </Animated.View>
 
