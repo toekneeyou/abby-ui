@@ -1,5 +1,11 @@
 import React from 'react';
-import {Pressable, PressableProps, StyleSheet, Text} from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import {colors} from '../styles/styleVariables';
 import {typography} from '../styles/globalStyles';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
@@ -20,6 +26,7 @@ type ButtonProps = PressableProps & {
   icon?: IconProp;
   color?: ButtonColor;
   size?: ButtonSize;
+  isLoading?: boolean;
 };
 
 export default function Button({
@@ -29,6 +36,7 @@ export default function Button({
   icon,
   color = 'eggplant',
   size = 'regular',
+  isLoading = false,
   ...props
 }: ButtonProps) {
   let backgroundColor: string;
@@ -89,7 +97,7 @@ export default function Button({
 
   return (
     <Pressable
-      disabled={disabled}
+      disabled={disabled || isLoading}
       {...props}
       style={({pressed}) => {
         if (!disabled) {
@@ -104,8 +112,6 @@ export default function Button({
               break;
             case 'text':
               fontColor = pressed ? colors[color][40] : colors[color][30];
-              // backgroundColor = pressed ? colors[color][40] : 'transparent';
-              // borderColor = pressed ? colors[color][40] : 'transparent';
               break;
             default:
               backgroundColor = pressed ? colors[color][40] : colors[color][30];
@@ -125,9 +131,13 @@ export default function Button({
         ];
       }}>
       {!!icon && <FontAwesomeIcon icon={icon} color={fontColor} />}
-      <Text style={[fontSize, {color: fontColor, fontWeight: 'bold'}]}>
-        {label}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator color={fontColor} size="small" />
+      ) : (
+        <Text style={[fontSize, {color: fontColor, fontWeight: 'bold'}]}>
+          {label}
+        </Text>
+      )}
     </Pressable>
   );
 }
