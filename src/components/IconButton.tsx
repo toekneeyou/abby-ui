@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  GestureResponderEvent,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -17,7 +18,7 @@ export type IconButtonProps = {
   icon: IconProp;
   label?: string;
   type?: IconButtonTypes;
-  onPressHandler: (arg?: any) => void;
+  onPressHandler: (event: GestureResponderEvent) => void;
   style?: TouchableOpacityProps['style'];
 };
 

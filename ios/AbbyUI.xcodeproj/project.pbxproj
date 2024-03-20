@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* AbbyUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AbbyUITests.m */; };
+		06CE1CF999A3425D9253D444 /* darkicon_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = B13833770D6B4FB6BADE15E4 /* darkicon_120x120.png */; };
 		0C80B921A6F3F58F76C31292 /* libPods-AbbyUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-AbbyUI.a */; };
 		0CED9C56B4384896BCA75796 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76E9C94C995B4F1483668217 /* Lato-Light.ttf */; };
 		0CFEAB4EF2074F839C5CD9C5 /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1F03881F22E40589AA88AE5 /* Lato-ThinItalic.ttf */; };
@@ -16,6 +17,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3E6E6883731845758267B6E9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 113BA9B8DEE441ACA4748BBE /* LICENSE.txt */; };
 		492FF428BC40421C93FBFD87 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3B3A24D53774164A33B65AB /* Roboto-Light.ttf */; };
+		4A8DDB1219034E55A0FE5C9F /* darkicon_180x180.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B10B6ADAB94622B304C7CB /* darkicon_180x180.png */; };
 		6177BF8BB7A248969EC1C668 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1DCBF10E05FA4B73BBCA7DD7 /* Roboto-BoldItalic.ttf */; };
 		699244CD8470469E96F1DF2B /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3695B803FE2349DAB0726007 /* Roboto-ThinItalic.ttf */; };
 		6D4E5278FE9647DC8DA22125 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 147BCEC644974244A31190F7 /* Roboto-BlackItalic.ttf */; };
@@ -40,8 +42,6 @@
 		F7423922550646DC9072E44F /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87A10DD4FE294D9F9E7F7BAD /* Lato-BoldItalic.ttf */; };
 		FC23771CB68341D6954A6D36 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1D1D68573DD4660BBBD58AD /* Roboto-Thin.ttf */; };
 		FEC80F85A313428EAA5EAD61 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65DD1DECA1B3409C91579DCF /* Roboto-Black.ttf */; };
-		06CE1CF999A3425D9253D444 /* darkicon_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = B13833770D6B4FB6BADE15E4 /* darkicon_120x120.png */; };
-		4A8DDB1219034E55A0FE5C9F /* darkicon_180x180.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B10B6ADAB94622B304C7CB /* darkicon_180x180.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +70,7 @@
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-AbbyUI-AbbyUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AbbyUI-AbbyUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DCBF10E05FA4B73BBCA7DD7 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../assets/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		2D82D2FD6C214FEF9BCF2075 /* Lato-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Bold.ttf"; path = "../assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		31B10B6ADAB94622B304C7CB /* darkicon_180x180.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = darkicon_180x180.png; path = ../assets/images/darkicon_180x180.png; sourceTree = "<group>"; };
 		3695B803FE2349DAB0726007 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-AbbyUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AbbyUI.debug.xcconfig"; path = "Target Support Files/Pods-AbbyUI/Pods-AbbyUI.debug.xcconfig"; sourceTree = "<group>"; };
 		4F4B6ADA82F54D788CA85FDE /* Lato-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Black.ttf"; path = "../assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
@@ -89,6 +90,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-AbbyUI-AbbyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AbbyUI-AbbyUITests.release.xcconfig"; path = "Target Support Files/Pods-AbbyUI-AbbyUITests/Pods-AbbyUI-AbbyUITests.release.xcconfig"; sourceTree = "<group>"; };
 		91CD647FBF7B4171910A09A9 /* logo.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = logo.svg; path = ../assets/images/logo.svg; sourceTree = "<group>"; };
 		AC3E3A91D22F402C96A6A87D /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-LightItalic.ttf"; path = "../assets/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; };
+		B13833770D6B4FB6BADE15E4 /* darkicon_120x120.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = darkicon_120x120.png; path = ../assets/images/darkicon_120x120.png; sourceTree = "<group>"; };
 		B1D1D68573DD4660BBBD58AD /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		B788080F59AB42D99876EE83 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		C6E2B7828510423981FB3ED0 /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
@@ -98,8 +100,6 @@
 		F11F5633A0834057B76A7B49 /* Lato-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Thin.ttf"; path = "../assets/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
 		FA098A1A89B243D1B1FEB782 /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = ../assets/fonts/OFL.txt; sourceTree = "<group>"; };
 		FF2AC7200CDB4D7189639CE1 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
-		B13833770D6B4FB6BADE15E4 /* darkicon_120x120.png */ = {isa = PBXFileReference; name = "darkicon_120x120.png"; path = "../assets/images/darkicon_120x120.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		31B10B6ADAB94622B304C7CB /* darkicon_180x180.png */ = {isa = PBXFileReference; name = "darkicon_180x180.png"; path = "../assets/images/darkicon_180x180.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -591,6 +591,7 @@
 				DEVELOPMENT_TEAM = V3ZGUBMQ73;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = AbbyUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -618,6 +619,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V3ZGUBMQ73;
 				INFOPLIST_FILE = AbbyUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

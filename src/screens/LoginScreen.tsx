@@ -1,29 +1,44 @@
 import {useEffect, useState} from 'react';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {LayoutAnimation, StyleSheet, Text, View} from 'react-native';
-import {API_URL} from '@env';
+import axios, {AxiosError} from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   RootStackParamList,
   getIsAppLoading,
   setIsAppLoading,
   setIsAuthenticated,
-} from '../store/generalStore';
-import {colors} from '../styles/styleVariables';
-import Logo from '../components/Logo';
-import {useAppDispatch, useAppSelector} from '../store/store';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import axios, {AxiosError} from 'axios';
-import {login} from '../services/apiService';
+} from '@store/generalStore';
+import {colors} from '@styles/styleVariables';
+import Logo from '@components/Logo';
+import {useAppDispatch, useAppSelector} from '@store/store';
+import Input from '@components/Input';
+import Button from '@components/Button';
+import {LoginRequest, login} from '@services/authenticationService';
+import {typography} from '@styles/globalStyles';
+import {setLinkToken, setUser} from '@store/userStore';
+import {createLinkToken} from '@services/plaidService';
+import {
+  accountsStorageKey,
+  institutionsStorageKey,
+  setAccounts,
+  setInstitutions,
+  setTransactions,
+  transactionsStorageKey,
+} from '@store/financialDataStore';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
 export default function LoginScreen({navigation, route}: LoginScreenProps) {
-  const isAppLoading = useAppSelector(getIsAppLoading);
   const dispatch = useAppDispatch();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [error, setError] = useState<AxiosError<any, any> | Error>();
+
+  const isAppLoading = useAppSelector(getIsAppLoading);
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,23 +50,72 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   }, []);
 
   const handleLogin = async () => {
+    setIsLoggingIn(true);
+    if (!username && !password) {
+      setError(new AxiosError('Both fields are empty, you dumbass!'));
+      return;
+    }
+    if (!username) {
+      setError(new AxiosError('You forgot your username, idiot!'));
+      return;
+    }
+
+    if (!password) {
+      setError(new AxiosError('WTF is your password?'));
+      return;
+    }
+
     try {
-      const response = await login({username, password});
+      const loginRequest: LoginRequest = {username, password};
+      const user = await login(loginRequest);
 
-      const {status} = response;
+      if (user) {
+        // save user into store
+        dispatch(setUser(user));
+        // create linkToken
+        const linkToken = await createLinkToken(user.id);
+        if (linkToken) {
+          dispatch(setLinkToken(linkToken));
+        }
+        // load saved accounts into redux
+        const accounts = await AsyncStorage.getItem(accountsStorageKey);
+        if (accounts) {
+          dispatch(setAccounts(JSON.parse(accounts)));
+        }
+        // load saved institutions into redux
+        const institutions = await AsyncStorage.getItem(institutionsStorageKey);
+        if (institutions) {
+          const parsedInstitutions = JSON.parse(institutions);
+          dispatch(setInstitutions(parsedInstitutions));
+        }
+        // load saved transactions into redux
+        const transactions = await AsyncStorage.getItem(transactionsStorageKey);
+        if (transactions) {
+          const parsedTransactions = JSON.parse(transactions);
+          dispatch(setTransactions(parsedTransactions));
+        }
 
-      if (status === 200) {
+        // authenticate user and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
+      } else {
+        setError(new AxiosError('Not sure what happened here. Try again.'));
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const {status, code, request, response} = error.toJSON() as AxiosError<
-          unknown,
-          unknown
-        >;
-        console.log(status, code, request, response);
+        const {status} = error.toJSON() as AxiosError<unknown, unknown>;
+        switch (status) {
+          case 401:
+            error.message = 'You fucked up!';
+            break;
+          default:
+            error.message = `Okay, this one's on us. Try again.`;
+        }
+
+        setError(error);
       }
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -73,6 +137,8 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
               value={username}
               onChangeText={setUsername}
               style={{width: 250}}
+              selectTextOnFocus={false}
+              textContentType="username"
             />
             <Input
               placeholder="Password"
@@ -80,15 +146,34 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
               onChangeText={setPassword}
               style={{width: 250}}
               isSecure={true}
+              selectTextOnFocus={false}
+              textContentType="password"
             />
           </View>
           <View style={styles.buttons}>
+            {!!error && (
+              <Text
+                style={[
+                  typography.b2,
+                  {
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    color: colors.tomato[10],
+                    width: 250,
+                  },
+                ]}>
+                {error.message}
+              </Text>
+            )}
+
             <Button
+              color={'pistachio'}
               onPress={handleLogin}
               label="Login"
-              disabled={!username || !password}
               style={{width: 250}}
+              isLoading={isLoggingIn}
             />
+
             <Button
               type="text"
               label="Forgot username/password?"

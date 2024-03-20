@@ -2,14 +2,14 @@ import {configureStore} from '@reduxjs/toolkit';
 import {useDispatch, useSelector, TypedUseSelectorHook} from 'react-redux';
 import layoutReducer from './layoutStore';
 import generalReducer from './generalStore';
-import accountReducer from './accountStore';
+import financialDataReducer from './financialDataStore';
 import userReducer from './userStore';
 
 export const store = configureStore({
   reducer: {
     layout: layoutReducer,
     general: generalReducer,
-    account: accountReducer,
+    financialData: financialDataReducer,
     user: userReducer,
   },
 });

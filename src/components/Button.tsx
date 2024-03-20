@@ -1,5 +1,11 @@
 import React from 'react';
-import {Pressable, PressableProps, StyleSheet, Text} from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import {colors} from '../styles/styleVariables';
 import {typography} from '../styles/globalStyles';
 import {IconProp} from '@fortawesome/fontawesome-svg-core';
@@ -20,6 +26,7 @@ type ButtonProps = PressableProps & {
   icon?: IconProp;
   color?: ButtonColor;
   size?: ButtonSize;
+  isLoading?: boolean;
 };
 
 export default function Button({
@@ -29,6 +36,7 @@ export default function Button({
   icon,
   color = 'eggplant',
   size = 'regular',
+  isLoading = false,
   ...props
 }: ButtonProps) {
   let backgroundColor: string;
@@ -41,24 +49,24 @@ export default function Button({
 
   switch (type) {
     case 'filled':
-      backgroundColor = disabled ? colors.gray[40] : colors[color][20];
+      backgroundColor = disabled ? colors.gray[40] : colors[color][30];
       fontColor = disabled ? colors.gray[10] : colors.white;
-      borderColor = disabled ? colors.gray[40] : colors[color][20];
+      borderColor = disabled ? colors.gray[40] : colors[color][30];
       break;
     case 'outlined':
       backgroundColor = 'transparent';
-      fontColor = disabled ? colors.gray[40] : colors[color][20];
-      borderColor = disabled ? colors.gray[40] : colors[color][20];
+      fontColor = disabled ? colors.gray[40] : colors[color][30];
+      borderColor = disabled ? colors.gray[40] : colors[color][30];
       break;
     case 'text':
       backgroundColor = 'transparent';
-      fontColor = disabled ? colors.gray[40] : colors[color][20];
+      fontColor = disabled ? colors.gray[40] : colors[color][30];
       borderColor = 'transparent';
       break;
     default:
-      backgroundColor = disabled ? colors.gray[40] : colors[color][20];
+      backgroundColor = disabled ? colors.gray[40] : colors[color][30];
       fontColor = disabled ? colors.gray[10] : colors.white;
-      borderColor = disabled ? colors.gray[40] : colors[color][20];
+      borderColor = disabled ? colors.gray[40] : colors[color][30];
   }
 
   switch (size) {
@@ -89,26 +97,25 @@ export default function Button({
 
   return (
     <Pressable
-      disabled={disabled}
+      disabled={disabled || isLoading}
       {...props}
       style={({pressed}) => {
         if (!disabled) {
           switch (type) {
             case 'filled':
-              backgroundColor = pressed ? colors[color][40] : colors[color][20];
-              borderColor = pressed ? colors[color][40] : colors[color][20];
+              backgroundColor = pressed ? colors[color][40] : colors[color][30];
+              borderColor = pressed ? colors[color][40] : colors[color][30];
               break;
             case 'outlined':
               backgroundColor = pressed ? colors[color][40] : 'transparent';
               borderColor = pressed ? colors[color][40] : 'transparent';
               break;
             case 'text':
-              backgroundColor = pressed ? colors[color][40] : 'transparent';
-              borderColor = pressed ? colors[color][40] : 'transparent';
+              fontColor = pressed ? colors[color][40] : colors[color][30];
               break;
             default:
-              backgroundColor = pressed ? colors[color][40] : colors[color][20];
-              borderColor = pressed ? colors[color][40] : colors[color][20];
+              backgroundColor = pressed ? colors[color][40] : colors[color][30];
+              borderColor = pressed ? colors[color][40] : colors[color][30];
           }
         }
 
@@ -124,9 +131,13 @@ export default function Button({
         ];
       }}>
       {!!icon && <FontAwesomeIcon icon={icon} color={fontColor} />}
-      <Text style={[fontSize, {color: fontColor, fontWeight: 'bold'}]}>
-        {label}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator color={fontColor} size="small" />
+      ) : (
+        <Text style={[fontSize, {color: fontColor, fontWeight: 'bold'}]}>
+          {label}
+        </Text>
+      )}
     </Pressable>
   );
 }
