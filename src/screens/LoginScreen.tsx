@@ -15,7 +15,11 @@ import Logo from '@components/Logo';
 import {useAppDispatch, useAppSelector} from '@store/store';
 import Input from '@components/Input';
 import Button from '@components/Button';
-import {LoginRequest, login} from '@services/authenticationService';
+import {
+  LoginRequest,
+  cancelLogin,
+  login,
+} from '@services/authenticationService';
 import {typography} from '@styles/globalStyles';
 import {setLinkToken, setUser} from '@store/userStore';
 import {createLinkToken} from '@services/plaidService';
@@ -49,6 +53,26 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     }, 2000);
   }, []);
 
+  const retreiveReduxStateFromStorage = async () => {
+    // load saved accounts into redux
+    const accounts = await AsyncStorage.getItem(accountsStorageKey);
+    if (accounts) {
+      dispatch(setAccounts(JSON.parse(accounts)));
+    }
+    // load saved institutions into redux
+    const institutions = await AsyncStorage.getItem(institutionsStorageKey);
+    if (institutions) {
+      const parsedInstitutions = JSON.parse(institutions);
+      dispatch(setInstitutions(parsedInstitutions));
+    }
+    // load saved transactions into redux
+    const transactions = await AsyncStorage.getItem(transactionsStorageKey);
+    if (transactions) {
+      const parsedTransactions = JSON.parse(transactions);
+      dispatch(setTransactions(parsedTransactions));
+    }
+  };
+
   const handleLogin = async () => {
     setIsLoggingIn(true);
     if (!username && !password) {
@@ -68,6 +92,10 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     try {
       const loginRequest: LoginRequest = {username, password};
       const user = await login(loginRequest);
+      setTimeout(() => {
+        cancelLogin();
+        setError(new AxiosError('Shit, we timed out. Try again.'));
+      }, 5000);
 
       if (user) {
         // save user into store
@@ -77,23 +105,8 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         if (linkToken) {
           dispatch(setLinkToken(linkToken));
         }
-        // load saved accounts into redux
-        const accounts = await AsyncStorage.getItem(accountsStorageKey);
-        if (accounts) {
-          dispatch(setAccounts(JSON.parse(accounts)));
-        }
-        // load saved institutions into redux
-        const institutions = await AsyncStorage.getItem(institutionsStorageKey);
-        if (institutions) {
-          const parsedInstitutions = JSON.parse(institutions);
-          dispatch(setInstitutions(parsedInstitutions));
-        }
-        // load saved transactions into redux
-        const transactions = await AsyncStorage.getItem(transactionsStorageKey);
-        if (transactions) {
-          const parsedTransactions = JSON.parse(transactions);
-          dispatch(setTransactions(parsedTransactions));
-        }
+        // retrieve redux state from storage
+        await retreiveReduxStateFromStorage();
         // set authentication state and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
