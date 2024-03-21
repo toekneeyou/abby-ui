@@ -138,7 +138,7 @@ export default function AccountCard({type, accounts}: AccountCardProps) {
         return (
           <AccountCardItem
             account={account}
-            key={`${account.plaidName}${account.plaidCurrentBalance}`}
+            key={`${account.plaidName}${account.plaidCurrentBalance}${index}`}
             isLast={isLast}
           />
         );

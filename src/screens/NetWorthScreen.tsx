@@ -8,31 +8,23 @@ import {
   View,
 } from 'react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {AxiosError} from 'axios';
 
-import InfoDisplay from '../features/InfoDisplay';
-import {colors, spacing} from '../styles/styleVariables';
-import AccountCard from '../features/AccountCard';
-import {useAppDispatch, useAppSelector} from '../store/store';
-import {heights, setIsSubHeaderShown} from '../store/layoutStore';
+import InfoDisplay from '@features/InfoDisplay';
+import {colors, spacing} from '@styles/styleVariables';
+import AccountCard from '@features/AccountCard';
+import {useAppDispatch, useAppSelector} from '@store/store';
+import {heights, setIsSubHeaderShown} from '@store/layoutStore';
 import {
   RootStackParamList,
   setCurrentRoute,
   setError,
-} from '../store/generalStore';
-import {
-  AccountType,
-  getAccounts,
-  getInstitutions,
-  setAccounts,
-  setInstitutions,
-} from '@store/financialDataStore';
-import {getUser} from '@store/userStore';
-import {fetchAccounts, fetchInstitutions} from '@services/databaseService';
-import {isDev, organizeAccountsResponseByCategory} from '@services/helper';
-import {AxiosError} from 'axios';
-import {FetchBalanceRequest, fetchBalance} from '@services/plaidService';
-import Chart from '@features/Chart';
-import ChartFilter from '@features/ChartFilter';
+} from '@store/generalStore';
+import {AccountType, getAccounts} from '@store/financialDataStore';
+import {isDev} from '@services/helper';
+import useSyncAccounts from '@hooks/useSyncAccounts';
+
+import NetWorthChart from '@features/NetWorthChart';
 
 type NetWorthScreenProps = BottomTabScreenProps<
   RootStackParamList,
@@ -40,11 +32,11 @@ type NetWorthScreenProps = BottomTabScreenProps<
 >;
 
 export default function NetWorthScreen({route}: NetWorthScreenProps) {
-  const dispatch = useAppDispatch();
-  const accounts = useAppSelector(getAccounts);
-  const institutions = useAppSelector(getInstitutions);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const user = useAppSelector(getUser);
+
+  const dispatch = useAppDispatch();
+  const syncEverything = useSyncAccounts();
+  const accounts = useAppSelector(getAccounts);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollY = e.nativeEvent.contentOffset.y;
@@ -65,21 +57,10 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
     if (isDev()) {
       console.log('handleRefresh');
     }
-
     try {
-      const promises = institutions.map(i => {
-        const fetchBalanceRequest: FetchBalanceRequest = {
-          accessToken: i.plaidAccessToken,
-          userId: user?.id as number,
-        };
-        return fetchBalance(fetchBalanceRequest);
-      });
-
-      const accountsResponse = await Promise.all(promises);
-      const newAccounts = organizeAccountsResponseByCategory(accountsResponse);
-      dispatch(setAccounts(newAccounts));
+      syncEverything();
     } catch (error) {
-      setError(error as AxiosError);
+      dispatch(setError(error as AxiosError));
     } finally {
       setIsRefreshing(false);
     }
@@ -98,8 +79,7 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
         />
       }>
       <InfoDisplay />
-      <Chart />
-      <ChartFilter />
+      <NetWorthChart />
       <View style={[styles.accountCards]}>
         {Object.entries(accounts).map(([type, a]) => {
           return (
