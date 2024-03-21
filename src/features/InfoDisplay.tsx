@@ -8,24 +8,92 @@ import HeaderText from '../components/HeaderText';
 import BodyText from '../components/BodyText';
 import {heights} from '../store/layoutStore';
 import {useAppSelector} from '@store/store';
-import {getNetWorth} from '@store/financialDataStore';
+import {getNetWorths} from '@store/financialDataStore';
 import {returnCurrency} from '@services/helper';
 
 type InfoDisplayProps = {};
 
 export default function InfoDisplay({}: InfoDisplayProps) {
-  const netWorth = useAppSelector(getNetWorth);
+  const netWorths = useAppSelector(getNetWorths);
   const [netWorthDisplay, setNetWorthDisplay] = useState({
     dollars: '0',
     cents: '00',
   });
+  const [dateDisplay, setDateDisplay] = useState({
+    month: '',
+    day: '',
+    year: '',
+  });
 
   useEffect(() => {
-    const dollars = Math.floor(netWorth);
-    const dollarsString = returnCurrency(dollars).replace(/\..*/, '');
-    const cents = (netWorth - dollars).toString().replace('.', '').slice(0, 2);
-    setNetWorthDisplay({dollars: dollarsString, cents});
-  }, [netWorth]);
+    const todaysDate = new Date();
+
+    const todaysNetWorth = netWorths.find(n => {
+      return (
+        n.day === todaysDate.getDate() &&
+        n.month === todaysDate.getMonth() &&
+        n.year === todaysDate.getFullYear()
+      );
+    });
+    if (todaysNetWorth) {
+      const dollars = Math.floor(+todaysNetWorth.amount);
+      const dollarsString = returnCurrency(dollars).replace(/\..*/, '');
+      const cents = (+todaysNetWorth.amount - dollars)
+        .toString()
+        .replace('.', '')
+        .slice(0, 2);
+      setNetWorthDisplay({dollars: dollarsString, cents});
+
+      setDateDisplay(() => {
+        let month = '';
+        let day = String(todaysNetWorth.day);
+        let year = String(todaysNetWorth.year);
+
+        switch (todaysNetWorth.month) {
+          case 0:
+            month = 'Jan';
+            break;
+          case 1:
+            month = 'Feb';
+            break;
+          case 2:
+            month = 'Mar';
+            break;
+          case 3:
+            month = 'Apr';
+            break;
+          case 4:
+            month = 'May';
+            break;
+          case 5:
+            month = 'Jun';
+            break;
+          case 6:
+            month = 'Jul';
+            break;
+          case 7:
+            month = 'Aug';
+            break;
+          case 8:
+            month = 'Sep';
+            break;
+          case 9:
+            month = 'Oct';
+            break;
+          case 10:
+            month = 'Nov';
+            break;
+          case 11:
+            month = 'Dec';
+            break;
+          default:
+            month = '';
+        }
+
+        return {month, day, year};
+      });
+    }
+  }, [netWorths]);
 
   return (
     <Animated.View style={[styles.infoDisplay, {height: heights.infoDisplay}]}>
@@ -42,7 +110,7 @@ export default function InfoDisplay({}: InfoDisplayProps) {
         <BodyText
           type="b3"
           style={{color: colors.gray[50], fontWeight: 'bold'}}>
-          Feb 20, 2024
+          {`${dateDisplay.month} ${dateDisplay.day}, ${dateDisplay.year}`}
         </BodyText>
         <View style={styles.percentage}>
           <BodyText
