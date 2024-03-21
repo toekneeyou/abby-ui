@@ -1,6 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StyleSheet} from 'react-native';
+import {useEffect} from 'react';
 
 import Header from './Header';
 import BottomNavBar from './BottomNavBar';
@@ -13,11 +14,19 @@ import LoginScreen from '@screens/LoginScreen';
 import NetWorthScreen from '@screens/NetWorthScreen';
 import TransactionsScreen from '@screens/TransactionsScreen';
 import {useAppSelector} from '@store/store';
+import useSyncAccounts from '@hooks/useSyncAccounts';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 export default function AuthNavContainer() {
   const isAuthenticated = useAppSelector(getIsAuthenticated);
+  const syncEverything = useSyncAccounts();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      syncEverything();
+    }
+  }, [isAuthenticated]);
 
   return (
     <NavigationContainer>

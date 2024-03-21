@@ -26,8 +26,10 @@ import {createLinkToken} from '@services/plaidService';
 import {
   accountsStorageKey,
   institutionsStorageKey,
+  netWorthsStorageKey,
   setAccounts,
   setInstitutions,
+  setNetWorths,
   setTransactions,
   transactionsStorageKey,
 } from '@store/financialDataStore';
@@ -70,6 +72,12 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     if (transactions) {
       const parsedTransactions = JSON.parse(transactions);
       dispatch(setTransactions(parsedTransactions));
+    }
+    // load saved netWorths into redux
+    const netWorths = await AsyncStorage.getItem(netWorthsStorageKey);
+    if (netWorths) {
+      const parsedNetWorths = JSON.parse(netWorths);
+      dispatch(setNetWorths(parsedNetWorths));
     }
   };
 

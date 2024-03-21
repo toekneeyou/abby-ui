@@ -16,12 +16,13 @@ import {
   getIsAuthenticated,
   setError,
 } from '../store/generalStore';
-import {getLinkToken, getUser, setUser} from '@store/userStore';
+import {getLinkToken, getUser} from '@store/userStore';
 import {
   FetchAccessTokenRequest,
   fetchAccessToken,
 } from '@services/plaidService';
 import {isDev} from '@services/helper';
+import {getInstitutions, setInstitutions} from '@store/financialDataStore';
 
 type HeaderProps = {};
 
@@ -29,6 +30,7 @@ export default function Header({}: HeaderProps) {
   const dispatch = useAppDispatch();
 
   const isAppLoading = useAppSelector(getIsAppLoading);
+  const institutions = useAppSelector(getInstitutions);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
   const linkToken = useAppSelector(getLinkToken);
   const user = useAppSelector(getUser);
@@ -49,8 +51,8 @@ export default function Header({}: HeaderProps) {
         userId: user?.id as number,
         publicToken: success.publicToken,
       };
-      const updatedUser = await fetchAccessToken(request);
-      dispatch(setUser(updatedUser));
+      const newInstitution = await fetchAccessToken(request);
+      dispatch(setInstitutions([...institutions, newInstitution]));
     } catch (error) {
       dispatch(setError(error as AxiosError));
     }
