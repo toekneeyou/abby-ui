@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
   },
   itemLast: {
     borderBottomWidth: 0,
+    borderBottomEndRadius: borders.radius,
+    borderBottomStartRadius: borders.radius,
   },
   itemLeft: {
     flexDirection: 'row',

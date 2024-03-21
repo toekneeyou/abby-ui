@@ -32,6 +32,7 @@ import {isDev, organizeAccountsResponseByCategory} from '@services/helper';
 import {AxiosError} from 'axios';
 import {FetchBalanceRequest, fetchBalance} from '@services/plaidService';
 import Chart from '@features/Chart';
+import ChartFilter from '@features/ChartFilter';
 
 type NetWorthScreenProps = BottomTabScreenProps<
   RootStackParamList,
@@ -98,6 +99,7 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
       }>
       <InfoDisplay />
       <Chart />
+      <ChartFilter />
       <View style={[styles.accountCards]}>
         {Object.entries(accounts).map(([type, a]) => {
           return (

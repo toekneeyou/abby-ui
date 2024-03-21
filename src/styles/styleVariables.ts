@@ -45,7 +45,7 @@ export const colors = {
 };
 
 export const spacing = {
-  sides: 10,
+  sides: 15,
   ends: 15,
 };
 
