@@ -39,7 +39,15 @@ export default function Accordion({
 
   return (
     <View style={styles.accordion}>
-      <Pressable style={styles.accordionHeader} onPress={toggleAccordon}>
+      <Pressable
+        style={[
+          styles.accordionHeader,
+          isCollapsed && {
+            borderEndStartRadius: borders.radius,
+            borderEndEndRadius: borders.radius,
+          },
+        ]}
+        onPress={toggleAccordon}>
         <View style={{flex: 1}}>{header}</View>
         <View>
           <FontAwesomeIcon
@@ -59,8 +67,10 @@ const styles = StyleSheet.create({
   accordion: {
     backgroundColor: colors.white,
     borderRadius: borders.radius,
-    overflow: 'hidden',
-    width: '100%',
+    borderBottomColor: colors.pistachio[30],
+    borderBottomWidth: 3,
+    borderRightColor: colors.pistachio[30],
+    borderRightWidth: 3,
   },
   accordionHeader: {
     height: 65,
@@ -70,6 +80,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     columnGap: 5,
+    borderTopStartRadius: borders.radius,
+    borderTopEndRadius: borders.radius,
   },
   accordionItems: {
     width: '100%',

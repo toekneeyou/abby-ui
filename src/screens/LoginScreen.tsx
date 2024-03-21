@@ -94,8 +94,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
           const parsedTransactions = JSON.parse(transactions);
           dispatch(setTransactions(parsedTransactions));
         }
-
-        // authenticate user and navigate to Net Worth
+        // set authentication state and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
       } else {
