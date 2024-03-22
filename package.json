@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "dev:ios": "NODE_ENV=development react-native run-ios --simulator=iPhone 15 Pro",
+    "dev:iphone": "NODE_ENV=development react-native run-ios",
     "build:ios": "NODE_ENV=production react-native run-ios --mode=Release",
     "lint": "eslint .",
     "start": "react-native start",
