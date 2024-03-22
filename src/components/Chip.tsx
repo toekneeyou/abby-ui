@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   chip: {
     borderRadius: 50,
     borderWidth: 1,
-    paddingHorizontal: 10,
-    height: 20,
+    paddingHorizontal: 15,
+    height: 25,
     justifyContent: 'center',
     alignItems: 'center',
   },
