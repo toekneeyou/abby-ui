@@ -1,6 +1,7 @@
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+
 import {NetWorth} from '@store/financialDataStore';
-import {ChartData} from '@features/NetWorthChart';
+import {ChartData} from '@components/Chart';
 
 export type NetWorthWithValue = NetWorth & {value: number};
 export type NetWorthFilterOption = '1w' | '1m' | '1y' | 'YTD' | 'Max';

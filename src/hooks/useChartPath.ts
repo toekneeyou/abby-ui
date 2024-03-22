@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
-import {ChartData} from '@features/NetWorthChart';
+
+import {ChartData} from '@components/Chart';
 
 export type UseChartPathParams<T> = {
   data: ChartData<T>[];
