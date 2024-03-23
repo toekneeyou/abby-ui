@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import {User} from '@store/userStore';
 import {isDev} from './helper';
-import {Account} from '@store/financialDataStore';
+import {Account, Institution} from '@store/financialDataStore';
 
 export type CreateLinkTokenRequest = {
   userId: string;
@@ -40,7 +40,7 @@ export type FetchAccessTokenRequest = {
  */
 export const fetchAccessToken: (
   getAccessTokenRequest: FetchAccessTokenRequest,
-) => Promise<User> = async getAccessTokenRequest => {
+) => Promise<Institution> = async getAccessTokenRequest => {
   if (isDev()) {
     console.log(`${API_URL}/api/v1/plaid/accessToken`);
   }

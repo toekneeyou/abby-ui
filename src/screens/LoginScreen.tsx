@@ -15,15 +15,22 @@ import Logo from '@components/Logo';
 import {useAppDispatch, useAppSelector} from '@store/store';
 import Input from '@components/Input';
 import Button from '@components/Button';
-import {LoginRequest, login} from '@services/authenticationService';
+import {
+  LoginRequest,
+  cancelLogin,
+  login,
+} from '@services/authenticationService';
 import {typography} from '@styles/globalStyles';
 import {setLinkToken, setUser} from '@store/userStore';
 import {createLinkToken} from '@services/plaidService';
 import {
   accountsStorageKey,
   institutionsStorageKey,
+  netWorthsStorageKey,
   setAccounts,
   setInstitutions,
+  setNetWorths,
+  setSelectedNetWorth,
   setTransactions,
   transactionsStorageKey,
 } from '@store/financialDataStore';
@@ -36,7 +43,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [error, setError] = useState<AxiosError<any, any> | Error>();
+  const [loginError, setLoginError] = useState<AxiosError<any, any> | Error>();
 
   const isAppLoading = useAppSelector(getIsAppLoading);
 
@@ -49,25 +56,68 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     }, 2000);
   }, []);
 
+  const retreiveReduxStateFromStorage = async () => {
+    // load saved accounts into redux
+    const accounts = await AsyncStorage.getItem(accountsStorageKey);
+    if (accounts) {
+      dispatch(setAccounts(JSON.parse(accounts)));
+    }
+    // load saved institutions into redux
+    const institutions = await AsyncStorage.getItem(institutionsStorageKey);
+    if (institutions) {
+      const parsedInstitutions = JSON.parse(institutions);
+      dispatch(setInstitutions(parsedInstitutions));
+    }
+    // load saved transactions into redux
+    const transactions = await AsyncStorage.getItem(transactionsStorageKey);
+    if (transactions) {
+      const parsedTransactions = JSON.parse(transactions);
+      dispatch(setTransactions(parsedTransactions));
+    }
+    // load saved netWorths into redux
+    const netWorths = await AsyncStorage.getItem(netWorthsStorageKey);
+    if (netWorths) {
+      const parsedNetWorths = JSON.parse(netWorths);
+      dispatch(setNetWorths(parsedNetWorths));
+      const lastItem = parsedNetWorths[parsedNetWorths.length - 1];
+      if (lastItem) {
+        dispatch(
+          setSelectedNetWorth(parsedNetWorths[parsedNetWorths.length - 1]),
+        );
+      }
+    }
+  };
+
   const handleLogin = async () => {
     setIsLoggingIn(true);
+
     if (!username && !password) {
-      setError(new AxiosError('Both fields are empty, you dumbass!'));
+      setLoginError(new AxiosError('Both fields are empty, you dumbass!'));
+      setIsLoggingIn(false);
       return;
     }
+
     if (!username) {
-      setError(new AxiosError('You forgot your username, idiot!'));
+      setLoginError(new AxiosError('You forgot your username, idiot!'));
+      setIsLoggingIn(false);
       return;
     }
 
     if (!password) {
-      setError(new AxiosError('WTF is your password?'));
+      setLoginError(new AxiosError('WTF is your password?'));
+      setIsLoggingIn(false);
       return;
     }
 
     try {
       const loginRequest: LoginRequest = {username, password};
       const user = await login(loginRequest);
+      // cancel login after 5 seconds
+      setTimeout(() => {
+        cancelLogin();
+        setLoginError(new AxiosError('Shit, we timed out. Try again.'));
+        setIsLoggingIn(false);
+      }, 5000);
 
       if (user) {
         // save user into store
@@ -77,28 +127,15 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         if (linkToken) {
           dispatch(setLinkToken(linkToken));
         }
-        // load saved accounts into redux
-        const accounts = await AsyncStorage.getItem(accountsStorageKey);
-        if (accounts) {
-          dispatch(setAccounts(JSON.parse(accounts)));
-        }
-        // load saved institutions into redux
-        const institutions = await AsyncStorage.getItem(institutionsStorageKey);
-        if (institutions) {
-          const parsedInstitutions = JSON.parse(institutions);
-          dispatch(setInstitutions(parsedInstitutions));
-        }
-        // load saved transactions into redux
-        const transactions = await AsyncStorage.getItem(transactionsStorageKey);
-        if (transactions) {
-          const parsedTransactions = JSON.parse(transactions);
-          dispatch(setTransactions(parsedTransactions));
-        }
+        // retrieve redux state from storage
+        await retreiveReduxStateFromStorage();
         // set authentication state and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
       } else {
-        setError(new AxiosError('Not sure what happened here. Try again.'));
+        setLoginError(
+          new AxiosError('Not sure what happened here. Try again.'),
+        );
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -111,7 +148,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
             error.message = `Okay, this one's on us. Try again.`;
         }
 
-        setError(error);
+        setLoginError(error);
       }
     } finally {
       setIsLoggingIn(false);
@@ -132,7 +169,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         <View style={styles.middle}>
           <View style={styles.inputs}>
             <Input
-              placeholder="Username"
+              placeholder={'Username'}
               value={username}
               onChangeText={setUsername}
               style={{width: 250}}
@@ -150,7 +187,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
             />
           </View>
           <View style={styles.buttons}>
-            {!!error && (
+            {!!loginError && (
               <Text
                 style={[
                   typography.b2,
@@ -161,7 +198,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
                     width: 250,
                   },
                 ]}>
-                {error.message}
+                {loginError.message}
               </Text>
             )}
 

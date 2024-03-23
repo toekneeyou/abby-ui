@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {API_URL} from '@env';
-import {Account, Institution} from '@store/financialDataStore';
+import {Account, Institution, NetWorth} from '@store/financialDataStore';
 import {isDev} from './helper';
 
 export type FetchInstitutionsRequest = {
@@ -54,6 +54,48 @@ export const fetchAccounts: (
     return response.data;
   } catch (error) {
     console.error('fetchAccounts', error);
+    throw error;
+  }
+};
+
+export type SaveNetWorthRequest = {
+  amount: number;
+  month: number;
+  day: number;
+  year: number;
+  userId: number;
+};
+export const saveNetWorth: (
+  fetchNetWorthsRequest: SaveNetWorthRequest,
+) => Promise<NetWorth> = async fetchNetWorthsRequest => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${API_URL}/api/v1/netWorth/save`,
+      data: fetchNetWorthsRequest,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('saveNetWorth', error);
+    throw error;
+  }
+};
+
+export type FetchNetWorthsRequest = {
+  userId: number;
+};
+export const fetchNetWorths: (
+  fetchNetWorthsRequest: FetchNetWorthsRequest,
+) => Promise<NetWorth[]> = async fetchNetWorthsRequest => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${API_URL}/api/v1/netWorth/all`,
+      data: fetchNetWorthsRequest,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchNetWorths', error);
     throw error;
   }
 };

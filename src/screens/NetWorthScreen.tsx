@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -8,31 +8,25 @@ import {
   View,
 } from 'react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {AxiosError} from 'axios';
 
-import InfoDisplay from '../features/InfoDisplay';
-import {colors, spacing} from '../styles/styleVariables';
-import AccountCard from '../features/AccountCard';
-import {useAppDispatch, useAppSelector} from '../store/store';
-import {heights, setIsSubHeaderShown} from '../store/layoutStore';
+import {colors, spacing} from '@styles/styleVariables';
+import AccountCard from '@features/AccountCard';
+import {useAppDispatch, useAppSelector} from '@store/store';
+import {heights, setIsSubHeaderShown} from '@store/layoutStore';
 import {
   RootStackParamList,
+  getIsPanningChart,
+  getIsSyncing,
   setCurrentRoute,
   setError,
-} from '../store/generalStore';
-import {
-  AccountType,
-  getAccounts,
-  getInstitutions,
-  setAccounts,
-  setInstitutions,
-} from '@store/financialDataStore';
-import {getUser} from '@store/userStore';
-import {fetchAccounts, fetchInstitutions} from '@services/databaseService';
-import {isDev, organizeAccountsResponseByCategory} from '@services/helper';
-import {AxiosError} from 'axios';
-import {FetchBalanceRequest, fetchBalance} from '@services/plaidService';
-import Chart from '@features/Chart';
-import ChartFilter from '@features/ChartFilter';
+  setIsSyncing,
+} from '@store/generalStore';
+import {AccountType, getAccounts} from '@store/financialDataStore';
+import {isDev} from '@services/helper';
+import useSyncAccounts from '@hooks/useSyncAccounts';
+
+import NetWorthChart from '@features/netWorthChart/NetWorthChart';
 
 type NetWorthScreenProps = BottomTabScreenProps<
   RootStackParamList,
@@ -41,10 +35,11 @@ type NetWorthScreenProps = BottomTabScreenProps<
 
 export default function NetWorthScreen({route}: NetWorthScreenProps) {
   const dispatch = useAppDispatch();
+
+  const isSyncing = useAppSelector(getIsSyncing);
   const accounts = useAppSelector(getAccounts);
-  const institutions = useAppSelector(getInstitutions);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const user = useAppSelector(getUser);
+  const isPanningChart = useAppSelector(getIsPanningChart);
+  const syncEverything = useSyncAccounts();
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollY = e.nativeEvent.contentOffset.y;
@@ -61,27 +56,16 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
   }, []);
 
   const handleRefresh = async () => {
-    setIsRefreshing(true);
+    dispatch(setIsSyncing(true));
     if (isDev()) {
       console.log('handleRefresh');
     }
-
     try {
-      const promises = institutions.map(i => {
-        const fetchBalanceRequest: FetchBalanceRequest = {
-          accessToken: i.plaidAccessToken,
-          userId: user?.id as number,
-        };
-        return fetchBalance(fetchBalanceRequest);
-      });
-
-      const accountsResponse = await Promise.all(promises);
-      const newAccounts = organizeAccountsResponseByCategory(accountsResponse);
-      dispatch(setAccounts(newAccounts));
+      syncEverything();
     } catch (error) {
-      setError(error as AxiosError);
+      dispatch(setError(error as AxiosError));
     } finally {
-      setIsRefreshing(false);
+      dispatch(setIsSyncing(false));
     }
   };
 
@@ -90,16 +74,15 @@ export default function NetWorthScreen({route}: NetWorthScreenProps) {
       onScroll={handleScroll}
       scrollEventThrottle={16}
       style={styles.netWorthScreen}
+      scrollEnabled={!isPanningChart}
       refreshControl={
         <RefreshControl
-          refreshing={isRefreshing}
+          refreshing={isSyncing}
           onRefresh={handleRefresh}
           style={{backgroundColor: colors.white}}
         />
       }>
-      <InfoDisplay />
-      <Chart />
-      <ChartFilter />
+      <NetWorthChart />
       <View style={[styles.accountCards]}>
         {Object.entries(accounts).map(([type, a]) => {
           return (
