@@ -1,7 +1,5 @@
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-
 import {NetWorth} from '@store/financialDataStore';
-import {ChartData} from '@components/Chart';
 
 export type NetWorthWithValue = NetWorth & {value: number};
 export type NetWorthFilterOption = '1w' | '1m' | '1y' | 'YTD' | 'Max';
@@ -14,14 +12,12 @@ export const netWorthChartFilters: NetWorthFilterOption[] = [
 ];
 
 export const useNetWorthFilters: (netWorths: NetWorth[]) => {
-  filteredData: ChartData<NetWorthWithValue>[];
+  filteredData: NetWorth[];
   filter: NetWorthFilterOption;
   setFilter: Dispatch<SetStateAction<NetWorthFilterOption>>;
 } = (netWorths: NetWorth[]) => {
   const [filter, setFilter] = useState(netWorthChartFilters[0]);
-  const [filteredData, setFilteredData] = useState<
-    ChartData<NetWorthWithValue>[]
-  >([]);
+  const [filteredData, setFilteredData] = useState<NetWorth[]>([]);
 
   useEffect(() => {
     const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));
@@ -65,11 +61,7 @@ export const useNetWorthFilters: (netWorths: NetWorth[]) => {
       default:
     }
 
-    const filteredDataWithValue = newFilteredData.map(nw => {
-      return {...nw, value: +nw.amount} as NetWorthWithValue;
-    });
-
-    setFilteredData(filteredDataWithValue);
+    setFilteredData(newFilteredData);
   }, [netWorths, filter]);
 
   return {filteredData, filter, setFilter};

@@ -5,7 +5,7 @@ import Chip from '@components/Chip';
 import {
   NetWorthFilterOption,
   netWorthChartFilters,
-} from '@hooks/useNetWorthFilters';
+} from '@features/netWorthChart/useNetWorthFilters';
 import {colors} from '@styles/styleVariables';
 
 type ChartFilterProps = {
