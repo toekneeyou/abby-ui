@@ -169,7 +169,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         <View style={styles.middle}>
           <View style={styles.inputs}>
             <Input
-              placeholder={process.env.API_URL}
+              placeholder={'Username'}
               value={username}
               onChangeText={setUsername}
               style={{width: 250}}
