@@ -1,20 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Animated, StyleSheet, View} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faArrowUpLong} from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowDownLong,
+  faArrowUpLong,
+} from '@fortawesome/free-solid-svg-icons';
 
 import {colors} from '../styles/styleVariables';
 import HeaderText from '../components/HeaderText';
 import BodyText from '../components/BodyText';
 import {heights} from '../store/layoutStore';
 import {useAppSelector} from '@store/store';
-import {getNetWorths} from '@store/financialDataStore';
+import {getSelectedNetWorth} from '@store/financialDataStore';
 import {returnCurrency} from '@services/helper';
 
-type InfoDisplayProps = {};
+type InfoDisplayProps = {netWorthChange: number | undefined};
 
-export default function InfoDisplay({}: InfoDisplayProps) {
-  const netWorths = useAppSelector(getNetWorths);
+export default function InfoDisplay({netWorthChange}: InfoDisplayProps) {
+  const selectedNetWorth = useAppSelector(getSelectedNetWorth);
   const [netWorthDisplay, setNetWorthDisplay] = useState({
     dollars: '0',
     cents: '00',
@@ -26,19 +29,11 @@ export default function InfoDisplay({}: InfoDisplayProps) {
   });
 
   useEffect(() => {
-    const todaysDate = new Date();
-
-    const todaysNetWorth = netWorths.find(n => {
-      return (
-        n.day === todaysDate.getDate() &&
-        n.month === todaysDate.getMonth() &&
-        n.year === todaysDate.getFullYear()
-      );
-    });
-    if (todaysNetWorth) {
-      const dollars = Math.floor(+todaysNetWorth.amount);
+    if (selectedNetWorth) {
+      const dollars = Math.floor(selectedNetWorth.amount);
       const dollarsString = returnCurrency(dollars).replace(/\..*/, '');
-      const cents = (+todaysNetWorth.amount - dollars)
+      const cents = (selectedNetWorth.amount - dollars)
+        .toFixed(2)
         .toString()
         .replace('.', '')
         .slice(0, 2);
@@ -46,10 +41,10 @@ export default function InfoDisplay({}: InfoDisplayProps) {
 
       setDateDisplay(() => {
         let month = '';
-        let day = String(todaysNetWorth.day);
-        let year = String(todaysNetWorth.year);
+        let day = String(selectedNetWorth.day);
+        let year = String(selectedNetWorth.year);
 
-        switch (todaysNetWorth.month) {
+        switch (selectedNetWorth.month) {
           case 0:
             month = 'Jan';
             break;
@@ -93,7 +88,7 @@ export default function InfoDisplay({}: InfoDisplayProps) {
         return {month, day, year};
       });
     }
-  }, [netWorths]);
+  }, [selectedNetWorth]);
 
   return (
     <Animated.View style={[styles.infoDisplay, {height: heights.infoDisplay}]}>
@@ -112,21 +107,32 @@ export default function InfoDisplay({}: InfoDisplayProps) {
           style={{color: colors.gray[50], fontWeight: 'bold'}}>
           {`${dateDisplay.month} ${dateDisplay.day}, ${dateDisplay.year}`}
         </BodyText>
-        <View style={styles.percentage}>
-          <BodyText
-            type="b3"
-            style={{
-              color: colors.pistachio[30],
-              fontWeight: 'bold',
-            }}>
-            <FontAwesomeIcon
-              icon={faArrowUpLong}
-              size={10}
-              color={colors.pistachio[30]}
-            />
-            1.4%
-          </BodyText>
-        </View>
+        {typeof netWorthChange === 'number' && (
+          <View style={styles.percentage}>
+            <BodyText
+              type="b3"
+              style={{
+                color:
+                  netWorthChange >= 0
+                    ? colors.pistachio[30]
+                    : colors.tomato[30],
+                fontWeight: 'bold',
+              }}>
+              <FontAwesomeIcon
+                icon={netWorthChange >= 0 ? faArrowUpLong : faArrowDownLong}
+                size={10}
+                color={
+                  netWorthChange >= 0 ? colors.pistachio[30] : colors.tomato[30]
+                }
+              />
+              {new Intl.NumberFormat('en-US', {
+                style: 'percent',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(netWorthChange)}
+            </BodyText>
+          </View>
+        )}
       </View>
     </Animated.View>
   );
