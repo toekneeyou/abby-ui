@@ -30,6 +30,7 @@ import {
   setAccounts,
   setInstitutions,
   setNetWorths,
+  setSelectedNetWorth,
   setTransactions,
   transactionsStorageKey,
 } from '@store/financialDataStore';
@@ -42,7 +43,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [error, setError] = useState<AxiosError<any, any> | Error>();
+  const [loginError, setLoginError] = useState<AxiosError<any, any> | Error>();
 
   const isAppLoading = useAppSelector(getIsAppLoading);
 
@@ -78,31 +79,44 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     if (netWorths) {
       const parsedNetWorths = JSON.parse(netWorths);
       dispatch(setNetWorths(parsedNetWorths));
+      const lastItem = parsedNetWorths[parsedNetWorths.length - 1];
+      if (lastItem) {
+        dispatch(
+          setSelectedNetWorth(parsedNetWorths[parsedNetWorths.length - 1]),
+        );
+      }
     }
   };
 
   const handleLogin = async () => {
     setIsLoggingIn(true);
+
     if (!username && !password) {
-      setError(new AxiosError('Both fields are empty, you dumbass!'));
+      setLoginError(new AxiosError('Both fields are empty, you dumbass!'));
+      setIsLoggingIn(false);
       return;
     }
+
     if (!username) {
-      setError(new AxiosError('You forgot your username, idiot!'));
+      setLoginError(new AxiosError('You forgot your username, idiot!'));
+      setIsLoggingIn(false);
       return;
     }
 
     if (!password) {
-      setError(new AxiosError('WTF is your password?'));
+      setLoginError(new AxiosError('WTF is your password?'));
+      setIsLoggingIn(false);
       return;
     }
 
     try {
       const loginRequest: LoginRequest = {username, password};
       const user = await login(loginRequest);
+      // cancel login after 5 seconds
       setTimeout(() => {
         cancelLogin();
-        setError(new AxiosError('Shit, we timed out. Try again.'));
+        setLoginError(new AxiosError('Shit, we timed out. Try again.'));
+        setIsLoggingIn(false);
       }, 5000);
 
       if (user) {
@@ -119,7 +133,9 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Net Worth');
       } else {
-        setError(new AxiosError('Not sure what happened here. Try again.'));
+        setLoginError(
+          new AxiosError('Not sure what happened here. Try again.'),
+        );
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -132,7 +148,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
             error.message = `Okay, this one's on us. Try again.`;
         }
 
-        setError(error);
+        setLoginError(error);
       }
     } finally {
       setIsLoggingIn(false);
@@ -153,7 +169,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         <View style={styles.middle}>
           <View style={styles.inputs}>
             <Input
-              placeholder="Username"
+              placeholder={process.env.API_URL}
               value={username}
               onChangeText={setUsername}
               style={{width: 250}}
@@ -171,7 +187,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
             />
           </View>
           <View style={styles.buttons}>
-            {!!error && (
+            {!!loginError && (
               <Text
                 style={[
                   typography.b2,
@@ -182,7 +198,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
                     width: 250,
                   },
                 ]}>
-                {error.message}
+                {loginError.message}
               </Text>
             )}
 
