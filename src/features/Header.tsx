@@ -1,16 +1,23 @@
 import React from 'react';
-import {Animated, LayoutChangeEvent, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  LayoutChangeEvent,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {faAdd} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import PlaidLink, {LinkExit, LinkSuccess} from 'react-native-plaid-link-sdk';
 import {AxiosError} from 'axios';
 
 import {colors, spacing} from '../styles/styleVariables';
-import {heights, setLayout, zIndices} from '../store/layoutStore';
+import {heights, paddings, setLayout, zIndices} from '../store/layoutStore';
 import SubHeader from './SubHeader';
 import Logo from '../components/Logo';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {
+  getCurrentRoute,
   getError,
   getIsAppLoading,
   getIsAuthenticated,
@@ -23,11 +30,16 @@ import {
 } from '@services/plaidService';
 import {isDev} from '@services/helper';
 import {getInstitutions, setInstitutions} from '@store/financialDataStore';
+import {useNavigation} from '@react-navigation/native';
+import {typography} from '@styles/globalStyles';
 
 type HeaderProps = {};
+const SIDE_WIDTH = 60;
 
 export default function Header({}: HeaderProps) {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+  const currentRoute = useAppSelector(getCurrentRoute);
 
   const isAppLoading = useAppSelector(getIsAppLoading);
   const institutions = useAppSelector(getInstitutions);
@@ -74,7 +86,12 @@ export default function Header({}: HeaderProps) {
           },
         ]}>
         <View style={styles.mainHeaderLeft}>
-          <Logo width={70} />
+          <Logo width={SIDE_WIDTH} />
+        </View>
+        <View>
+          <Text style={[typography.b2, {fontWeight: 'bold'}]}>
+            {currentRoute}
+          </Text>
         </View>
         <View style={styles.mainHeaderRight}>
           <PlaidLink
@@ -99,17 +116,21 @@ const styles = StyleSheet.create({
     zIndex: zIndices.header,
   },
   mainHeader: {
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: spacing.sides,
-    paddingRight: spacing.sides,
+    paddingHorizontal: paddings.header.h,
+    height: heights.header,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     zIndex: zIndices.header,
     position: 'relative',
     backgroundColor: colors.white,
+    width: '100%',
   },
-  mainHeaderLeft: {},
-  mainHeaderRight: {},
+  mainHeaderLeft: {width: SIDE_WIDTH},
+  mainHeaderCenter: {flex: 1, justifyContent: 'center'},
+  mainHeaderRight: {
+    width: SIDE_WIDTH,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
 });

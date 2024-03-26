@@ -20,15 +20,20 @@ interface LayoutState {
   isSubHeaderShown: boolean;
 }
 
-export const zIndices: {[key: string]: number} = {
+export const zIndices = {
   netWorthScreen: 0,
   header: 100,
   subHeader: 90,
 };
-export const heights: {[key: string]: number} = {
-  header: 50,
+export const heights = {
+  header: 40,
   subHeader: 40,
-  infoDisplay: 120,
+  infoDisplay: 90,
+  chart: 100,
+};
+
+export const paddings: {[key: string]: {h: number; v: number}} = {
+  header: {h: 20, v: 0},
 };
 
 const initialState: LayoutState = {
