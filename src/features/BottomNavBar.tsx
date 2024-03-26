@@ -1,6 +1,12 @@
 import React from 'react';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import {SafeAreaView, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  LayoutChangeEvent,
+} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faDollar,
@@ -16,7 +22,8 @@ import {
   getIsAppLoading,
   getIsAuthenticated,
 } from '../store/generalStore';
-import {useAppSelector} from '../store/store';
+import {useAppDispatch, useAppSelector} from '../store/store';
+import {setLayout} from '@store/layoutStore';
 
 export default function BottomNavBar({
   state,
@@ -24,13 +31,23 @@ export default function BottomNavBar({
   navigation,
   insets,
 }: BottomTabBarProps) {
+  const dispatch = useAppDispatch();
   const isAppLoading = useAppSelector(getIsAppLoading);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
 
   if (isAppLoading || !isAuthenticated) return null;
 
+  const handleLayout = (e: LayoutChangeEvent) => {
+    dispatch(
+      setLayout({
+        name: 'BottomNavBar',
+        layout: e.nativeEvent.layout,
+      }),
+    );
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} onLayout={handleLayout}>
       {state.routes.map((route, index) => {
         const isSelected = state.index === index;
         const routeName = route.name as keyof RootStackParamList;
@@ -90,6 +107,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   selectedItem: {
-    borderTopColor: colors.eggplant[10],
+    borderTopColor: colors.pistachio[20],
   },
 });
