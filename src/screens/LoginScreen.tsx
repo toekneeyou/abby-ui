@@ -21,19 +21,24 @@ import {
   login,
 } from '@services/authenticationService';
 import {typography} from '@styles/globalStyles';
-import {setLinkToken, setUser} from '@store/userStore';
+import {USER_ID_STORAGE_KEY, setLinkToken, setUser} from '@store/userStore';
 import {createLinkToken} from '@services/plaidService';
 import {
   accountsStorageKey,
   institutionsStorageKey,
-  netWorthsStorageKey,
   setAccounts,
   setInstitutions,
-  setNetWorths,
-  setSelectedNetWorth,
   setTransactions,
   transactionsStorageKey,
 } from '@store/financialDataStore';
+import {
+  SELECTED_TREND_CATEGORY_STORAGE_KEY,
+  TRENDS_STORAGE_KEY,
+  Trend,
+  TrendCategories,
+  setSelectedTrendCategory,
+  setTrends,
+} from '@store/trendsStore';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
@@ -56,36 +61,41 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
     }, 2000);
   }, []);
 
-  const retreiveReduxStateFromStorage = async () => {
-    // load saved accounts into redux
-    const accounts = await AsyncStorage.getItem(accountsStorageKey);
-    if (accounts) {
-      dispatch(setAccounts(JSON.parse(accounts)));
-    }
-    // load saved institutions into redux
-    const institutions = await AsyncStorage.getItem(institutionsStorageKey);
-    if (institutions) {
-      const parsedInstitutions = JSON.parse(institutions);
-      dispatch(setInstitutions(parsedInstitutions));
-    }
-    // load saved transactions into redux
-    const transactions = await AsyncStorage.getItem(transactionsStorageKey);
-    if (transactions) {
-      const parsedTransactions = JSON.parse(transactions);
-      dispatch(setTransactions(parsedTransactions));
-    }
-    // load saved netWorths into redux
-    const netWorths = await AsyncStorage.getItem(netWorthsStorageKey);
-    if (netWorths) {
-      const parsedNetWorths = JSON.parse(netWorths);
-      dispatch(setNetWorths(parsedNetWorths));
-      const lastItem = parsedNetWorths[parsedNetWorths.length - 1];
-      if (lastItem) {
-        dispatch(
-          setSelectedNetWorth(parsedNetWorths[parsedNetWorths.length - 1]),
-        );
+  const retreiveReduxStateFromStorage = async (userId: number) => {
+    const lastUserId = await AsyncStorage.getItem(USER_ID_STORAGE_KEY);
+    if (lastUserId === String(userId)) {
+      // load saved accounts into redux
+      const accounts = await AsyncStorage.getItem(accountsStorageKey);
+      if (accounts) {
+        dispatch(setAccounts(JSON.parse(accounts)));
+      }
+      // load saved institutions into redux
+      const institutions = await AsyncStorage.getItem(institutionsStorageKey);
+      if (institutions) {
+        const parsedInstitutions = JSON.parse(institutions);
+        dispatch(setInstitutions(parsedInstitutions));
+      }
+      // load saved transactions into redux
+      const transactions = await AsyncStorage.getItem(transactionsStorageKey);
+      if (transactions) {
+        const parsedTransactions = JSON.parse(transactions);
+        dispatch(setTransactions(parsedTransactions));
+      }
+      // load saved trends into redux
+      const trends = await AsyncStorage.getItem(TRENDS_STORAGE_KEY);
+      if (trends) {
+        const parsedTrends = JSON.parse(trends) as Trend[];
+        dispatch(setTrends(parsedTrends));
+      }
+      // load selected trend category into redux
+      const selectedTrendCategory = (await AsyncStorage.getItem(
+        SELECTED_TREND_CATEGORY_STORAGE_KEY,
+      )) as TrendCategories;
+      if (selectedTrendCategory) {
+        dispatch(setSelectedTrendCategory(selectedTrendCategory));
       }
     }
+    return lastUserId;
   };
 
   const handleLogin = async () => {
@@ -128,8 +138,8 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
           dispatch(setLinkToken(linkToken));
         }
         // retrieve redux state from storage
-        await retreiveReduxStateFromStorage();
-        // set authentication state and navigate to Net Worth
+        await retreiveReduxStateFromStorage(user.id);
+        // set authentication state and navigate to Home Screen
         dispatch(setIsAuthenticated(true));
         navigation.navigate('Home');
       } else {
