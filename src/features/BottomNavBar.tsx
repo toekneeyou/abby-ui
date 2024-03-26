@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
-  Text,
   LayoutChangeEvent,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -21,6 +20,7 @@ import {
   RootStackParamList,
   getIsAppLoading,
   getIsAuthenticated,
+  setCurrentRoute,
 } from '../store/generalStore';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {setLayout} from '@store/layoutStore';
@@ -74,7 +74,10 @@ export default function BottomNavBar({
             key={route.name}
             disabled={isSelected}
             style={[styles.item, isSelected && styles.selectedItem]}
-            onPress={() => navigation.navigate(routeName)}>
+            onPress={() => {
+              dispatch(setCurrentRoute(routeName));
+              navigation.navigate(routeName);
+            }}>
             <FontAwesomeIcon
               size={20}
               icon={icon}
