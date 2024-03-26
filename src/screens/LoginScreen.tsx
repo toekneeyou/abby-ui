@@ -131,7 +131,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
         await retreiveReduxStateFromStorage();
         // set authentication state and navigate to Net Worth
         dispatch(setIsAuthenticated(true));
-        navigation.navigate('Net Worth');
+        navigation.navigate('Home');
       } else {
         setLoginError(
           new AxiosError('Not sure what happened here. Try again.'),

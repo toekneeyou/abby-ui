@@ -37,7 +37,7 @@ export default function BottomNavBar({
         let icon: IconProp;
 
         switch (routeName) {
-          case 'Net Worth':
+          case 'Home':
             icon = faHouse;
             break;
           case 'Transactions':

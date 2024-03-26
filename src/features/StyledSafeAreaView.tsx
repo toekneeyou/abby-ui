@@ -20,7 +20,7 @@ export default function StyledSafeAreaView({
       case 'Login':
         setBackgroundColor(colors.eggplant[30]);
         break;
-      case 'Net Worth':
+      case 'Home':
       case 'Transactions':
       case 'Settings':
         setBackgroundColor(colors.white);

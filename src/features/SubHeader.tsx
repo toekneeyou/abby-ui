@@ -16,7 +16,7 @@ export default function SubHeader() {
 
   useEffect(() => {
     switch (currentRoute) {
-      case 'Net Worth':
+      case 'Home':
         SubHeader = NetWorthSubHeader;
         break;
       case 'Transactions':

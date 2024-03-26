@@ -4,7 +4,7 @@ import {RootState} from './store';
 
 export type RootStackParamList = {
   Login: undefined;
-  'Net Worth': undefined;
+  Home: undefined;
   Transactions: undefined;
   Settings: undefined;
 };

@@ -28,12 +28,9 @@ import useSyncAccounts from '@hooks/useSyncAccounts';
 
 import NetWorthChart from '@features/netWorthChart/NetWorthChart';
 
-type NetWorthScreenProps = BottomTabScreenProps<
-  RootStackParamList,
-  'Net Worth'
->;
+type HomeScreenProps = BottomTabScreenProps<RootStackParamList, 'Home'>;
 
-export default function NetWorthScreen({route}: NetWorthScreenProps) {
+export default function HomeScreen({route}: HomeScreenProps) {
   const dispatch = useAppDispatch();
 
   const isSyncing = useAppSelector(getIsSyncing);
