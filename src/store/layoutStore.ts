@@ -21,19 +21,26 @@ interface LayoutState {
 }
 
 export const zIndices = {
-  netWorthScreen: 0,
+  homeScreen: 0,
   header: 100,
   subHeader: 90,
+  dropdown: 80,
 };
 export const heights = {
-  header: 40,
+  header: 45,
   subHeader: 40,
   infoDisplay: 90,
   chart: 100,
+  chartFilters: 40,
+  progressBar: 4,
 };
 
-export const paddings: {[key: string]: {h: number; v: number}} = {
+export const paddings = {
+  standard: {h: 20, v: 20},
+  infoDisplay: {h: 20, v: 15},
   header: {h: 20, v: 0},
+  accountCards: {h: 20, v: 15},
+  chartFilters: {h: 20, v: 0},
 };
 
 const initialState: LayoutState = {
