@@ -42,10 +42,10 @@ export default function Dropdown<T>({
   }, [size]);
 
   const backgroundColor = useMemo(() => {
-    return type === 'filled' ? colors.eggplant[30] : colors.white;
+    return type === 'filled' ? colors.eggplant[20] : colors.white;
   }, [type]);
   const fontColor = useMemo(() => {
-    return type === 'filled' ? colors.white : colors.eggplant[30];
+    return type === 'filled' ? colors.white : colors.eggplant[20];
   }, [type]);
 
   useEffect(() => {
@@ -84,7 +84,15 @@ export default function Dropdown<T>({
               }),
             },
           ]}>
-          <Text style={[typography.b2, {textTransform: 'capitalize'}]}>
+          <Text
+            style={[
+              typography.b2,
+              {
+                fontWeight: 'bold',
+                textTransform: 'capitalize',
+                color: fontColor,
+              },
+            ]}>
             {selectedOption?.label}
           </Text>
           <FontAwesomeIcon
@@ -119,8 +127,7 @@ export default function Dropdown<T>({
                   styles.dropdownItem,
                   {
                     height,
-                    backgroundColor:
-                      type === 'filled' ? colors.gray[0] : colors.white,
+                    backgroundColor: colors.white,
                   },
                   isLast && {
                     borderBottomEndRadius: 10,
@@ -143,7 +150,7 @@ export default function Dropdown<T>({
 const styles = StyleSheet.create({
   dropdown: {
     zIndex: zIndices.dropdown,
-    shadowColor: colors.pistachio[30],
+    shadowColor: colors.pistachio[20],
     shadowOffset: {height: 2, width: 2},
     shadowRadius: 0,
   },
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     flexDirection: 'row',
     columnGap: 5,
-    borderColor: colors.eggplant[30],
+    borderColor: colors.eggplant[20],
     borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -164,7 +171,7 @@ const styles = StyleSheet.create({
   dropdownItem: {
     flexDirection: 'row',
     columnGap: 5,
-    borderColor: colors.eggplant[30],
+    borderColor: colors.gray[10],
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderBottomWidth: 1,
