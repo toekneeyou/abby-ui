@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {getCurrentRoute} from '../store/generalStore';
 import {useAppSelector} from '../store/store';
 import {colors} from '../styles/styleVariables';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
 type StyledSafeAreaViewProps = {
   children: React.JSX.Element | React.JSX.Element[];
@@ -31,6 +31,8 @@ export default function StyledSafeAreaView({
   }, [route]);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor}}>{children}</SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={{flex: 1, backgroundColor}}>{children}</SafeAreaView>
+    </SafeAreaProvider>
   );
 }

@@ -27,9 +27,10 @@ export const zIndices = {
   dropdown: 80,
 };
 export const heights = {
-  header: 45,
+  header: 36,
   subHeader: 40,
-  infoDisplay: 90,
+  trendDetail: 90,
+  trendCategoryFilter: 40,
   chart: 100,
   chartFilters: 40,
   progressBar: 4,
@@ -37,7 +38,8 @@ export const heights = {
 
 export const paddings = {
   standard: {h: 20, v: 20},
-  infoDisplay: {h: 20, v: 15},
+  trendDetail: {h: 20, v: 20},
+  trendCategoryFilter: {h: 20, v: 4},
   header: {h: 20, v: 0},
   accountCards: {h: 20, v: 15},
   chartFilters: {h: 20, v: 0},

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 import {API_URL} from '@env';
-import {Account, Institution, NetWorth} from '@store/financialDataStore';
+import {Account, Institution} from '@store/financialDataStore';
 import {isDev} from './helper';
+import {Trend, TrendCategories} from '@store/trendsStore';
 
 export type FetchInstitutionsRequest = {
   userId: number;
@@ -58,44 +59,43 @@ export const fetchAccounts: (
   }
 };
 
-export type SaveNetWorthRequest = {
-  amount: number;
-  month: number;
-  day: number;
-  year: number;
+export type SaveTrendRequest = {
+  value: number;
+  category: TrendCategories;
   userId: number;
+  date: string;
 };
-export const saveNetWorth: (
-  fetchNetWorthsRequest: SaveNetWorthRequest,
-) => Promise<NetWorth> = async fetchNetWorthsRequest => {
+export const saveTrend: (
+  saveTrendRequest: SaveTrendRequest,
+) => Promise<Trend> = async saveTrendRequest => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${API_URL}/api/v1/netWorth/save`,
-      data: fetchNetWorthsRequest,
+      url: `${API_URL}/api/v1/trends/save`,
+      data: saveTrendRequest,
     });
     return response.data;
   } catch (error) {
-    console.error('saveNetWorth', error);
+    console.error('saveTrend', error);
     throw error;
   }
 };
 
-export type FetchNetWorthsRequest = {
+export type FetchTrendsRequest = {
   userId: number;
 };
-export const fetchNetWorths: (
-  fetchNetWorthsRequest: FetchNetWorthsRequest,
-) => Promise<NetWorth[]> = async fetchNetWorthsRequest => {
+export const fetchTrends: (
+  fetchTrendsRequest: FetchTrendsRequest,
+) => Promise<Trend[]> = async fetchTrendsRequest => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${API_URL}/api/v1/netWorth/all`,
-      data: fetchNetWorthsRequest,
+      url: `${API_URL}/api/v1/trends/all`,
+      data: fetchTrendsRequest,
     });
     return response.data;
   } catch (error) {
-    console.error('fetchNetWorths', error);
+    console.error('fetchTrends', error);
     throw error;
   }
 };

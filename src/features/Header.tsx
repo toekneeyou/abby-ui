@@ -1,108 +1,62 @@
 import React from 'react';
-import {
-  Animated,
-  LayoutChangeEvent,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {LayoutChangeEvent, StyleSheet, Text, View} from 'react-native';
 import {faAdd} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import PlaidLink, {LinkExit, LinkSuccess} from 'react-native-plaid-link-sdk';
-import {AxiosError} from 'axios';
+import PlaidLink, {PlaidLinkProps} from 'react-native-plaid-link-sdk';
 
-import {colors, spacing} from '../styles/styleVariables';
+import {colors} from '../styles/styleVariables';
 import {heights, paddings, setLayout, zIndices} from '../store/layoutStore';
 import SubHeader from './SubHeader';
 import Logo from '../components/Logo';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {
   getCurrentRoute,
-  getError,
   getIsAppLoading,
   getIsAuthenticated,
-  setError,
+  getIsSyncing,
 } from '../store/generalStore';
-import {getLinkToken, getUser} from '@store/userStore';
-import {
-  FetchAccessTokenRequest,
-  fetchAccessToken,
-} from '@services/plaidService';
-import {isDev} from '@services/helper';
-import {getInstitutions, setInstitutions} from '@store/financialDataStore';
-import {useNavigation} from '@react-navigation/native';
 import {typography} from '@styles/globalStyles';
+import usePlaidLink from '@hooks/usePlaidLink';
+import ProgressBar from '@components/ProgressBar';
 
 type HeaderProps = {};
 const SIDE_WIDTH = 60;
 
 export default function Header({}: HeaderProps) {
-  const dispatch = useAppDispatch();
-  const navigation = useNavigation();
   const currentRoute = useAppSelector(getCurrentRoute);
-
   const isAppLoading = useAppSelector(getIsAppLoading);
-  const institutions = useAppSelector(getInstitutions);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
-  const linkToken = useAppSelector(getLinkToken);
-  const user = useAppSelector(getUser);
-  const error = useAppSelector(getError);
+  const isSyncing = useAppSelector(getIsSyncing);
+  const plaidConfig = usePlaidLink();
 
   if (isAppLoading || !isAuthenticated) return null;
 
-  const handleLayout = (e: LayoutChangeEvent) => {
-    setLayout({
-      name: 'header',
-      layout: e.nativeEvent.layout,
-    });
-  };
-
-  const handleSuccess = async (success: LinkSuccess) => {
-    try {
-      const request: FetchAccessTokenRequest = {
-        userId: user?.id as number,
-        publicToken: success.publicToken,
-      };
-      const newInstitution = await fetchAccessToken(request);
-      dispatch(setInstitutions([...institutions, newInstitution]));
-    } catch (error) {
-      dispatch(setError(error as AxiosError));
-    }
-  };
-
-  const handleExit = async (exit: LinkExit) => {
-    if (isDev()) {
-      console.log('exit', exit);
-    }
-  };
-
   return (
-    <View style={styles.header} onLayout={handleLayout}>
-      <Animated.View
-        style={[
-          styles.mainHeader,
-          {
-            height: heights.header,
-          },
-        ]}>
-        <View style={styles.mainHeaderLeft}>
-          <Logo width={SIDE_WIDTH} />
+    <View style={styles.header}>
+      <View style={[styles.front]}>
+        <View
+          style={[
+            styles.mainHeader,
+            {
+              height: heights.header - heights.progressBar,
+            },
+          ]}>
+          <View style={styles.mainHeaderLeft}>
+            <Logo width={SIDE_WIDTH} />
+          </View>
+          <View>
+            <Text style={[typography.b2, {fontWeight: 'bold'}]}>
+              {currentRoute}
+            </Text>
+          </View>
+          <View style={styles.mainHeaderRight}>
+            <PlaidLink {...(plaidConfig as PlaidLinkProps)}>
+              <FontAwesomeIcon icon={faAdd} color={colors.eggplant[20]} />
+            </PlaidLink>
+          </View>
         </View>
-        <View>
-          <Text style={[typography.b2, {fontWeight: 'bold'}]}>
-            {currentRoute}
-          </Text>
-        </View>
-        <View style={styles.mainHeaderRight}>
-          <PlaidLink
-            tokenConfig={{token: linkToken as string, noLoadingState: true}}
-            onSuccess={handleSuccess}
-            onExit={handleExit}>
-            <FontAwesomeIcon icon={faAdd} color={colors.eggplant[20]} />
-          </PlaidLink>
-        </View>
-      </Animated.View>
-
+        <ProgressBar isInProgress={isSyncing} continuous />
+      </View>
       <SubHeader />
     </View>
   );
@@ -111,9 +65,13 @@ export default function Header({}: HeaderProps) {
 const styles = StyleSheet.create({
   header: {
     position: 'relative',
-    backgroundColor: 'green',
     overflow: 'visible',
     zIndex: zIndices.header,
+  },
+  front: {
+    zIndex: zIndices.header,
+    height: heights.header,
+    backgroundColor: colors.white,
   },
   mainHeader: {
     paddingHorizontal: paddings.header.h,
@@ -121,9 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    zIndex: zIndices.header,
     position: 'relative',
-    backgroundColor: colors.white,
     width: '100%',
   },
   mainHeaderLeft: {width: SIDE_WIDTH},

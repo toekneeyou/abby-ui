@@ -68,11 +68,15 @@ function AccountCardHeader({type, balance}: AccountCardHeaderProps) {
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
-        <FontAwesomeIcon icon={icon} color={colors.eggplant[50]} />
-        <Text style={[typography.b1, {fontWeight: 'bold'}]}>{title}</Text>
+        <FontAwesomeIcon icon={icon} color={colors.gray[10]} />
+        <Text
+          style={[typography.b1, {fontWeight: 'bold', color: colors.gray[0]}]}>
+          {title}
+        </Text>
       </View>
       <View style={styles.headerRight}>
-        <Text style={[typography.b1, {fontWeight: 'bold'}]}>
+        <Text
+          style={[typography.b1, {fontWeight: 'bold', color: colors.gray[0]}]}>
           {returnCurrency(balance)}
         </Text>
       </View>
@@ -97,7 +101,11 @@ function AccountCardItem({account, isLast}: AccountCardItemProps) {
         </View>
         <View style={styles.itemLeftInfo}>
           <Text style={typography.b1}>{account.plaidName}</Text>
-          <Text style={[typography.b2, {color: colors.gray[50]}]}>
+          <Text
+            style={[
+              typography.b2,
+              {color: colors.gray[50], textTransform: 'capitalize'},
+            ]}>
             {account.plaidSubType}
           </Text>
         </View>
@@ -132,7 +140,9 @@ export default function AccountCard({type, accounts}: AccountCardProps) {
   return (
     <Accordion
       header={<AccountCardHeader type={type} balance={balance} />}
-      initialIsCollapsed={false}>
+      initialIsCollapsed={false}
+      headerBackgroundColor={colors.eggplant[40]}
+      caretColor={colors.gray[0]}>
       {accounts.map((account, index) => {
         const isLast = index === accounts.length - 1;
         return (

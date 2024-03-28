@@ -47,30 +47,16 @@ export type Transaction = {
 };
 export type TransactionsState = {[plaidAccountId: string]: Transaction[]};
 
-// NetWorth Types
-export const netWorthsStorageKey = 'netWorths';
-export type NetWorth = {
-  id?: number;
-  amount: number;
-  month: number;
-  day: number;
-  year: number;
-};
-
 interface FinancialDataState {
   institutions: Institution[];
   accounts: AccountsState;
   transactions: TransactionsState;
-  netWorths: NetWorth[];
-  selectedNetWorth: NetWorth | undefined;
 }
 
 export const initialState: FinancialDataState = {
   accounts: {},
   institutions: [],
   transactions: {},
-  netWorths: [],
-  selectedNetWorth: undefined,
 };
 
 export const financialDataSlice = createSlice({
@@ -106,24 +92,11 @@ export const financialDataSlice = createSlice({
         JSON.stringify(action.payload),
       );
     },
-    setNetWorths: (state, action: PayloadAction<NetWorth[]>) => {
-      state.netWorths = action.payload;
-      AsyncStorage.setItem(netWorthsStorageKey, JSON.stringify(action.payload));
-    },
-    setSelectedNetWorth: (state, action: PayloadAction<NetWorth>) => {
-      state.selectedNetWorth = action.payload;
-    },
   },
 });
 
-export const {
-  addInstitution,
-  setInstitutions,
-  setAccounts,
-  setTransactions,
-  setNetWorths,
-  setSelectedNetWorth,
-} = financialDataSlice.actions;
+export const {addInstitution, setInstitutions, setAccounts, setTransactions} =
+  financialDataSlice.actions;
 
 export const getInstitutions = (state: RootState) =>
   state.financialData.institutions;
@@ -132,10 +105,5 @@ export const getAccounts = (state: RootState) => state.financialData.accounts;
 
 export const getTransactions = (state: RootState) =>
   state.financialData.transactions;
-
-export const getNetWorths = (state: RootState) => state.financialData.netWorths;
-
-export const getSelectedNetWorth = (state: RootState) =>
-  state.financialData.selectedNetWorth;
 
 export default financialDataSlice.reducer;

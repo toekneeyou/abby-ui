@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from './store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {filterTrends} from '@services/helper';
 
 // DB stores top 4 in lower case
 // DB doesn't store computed trends
@@ -28,14 +29,14 @@ interface TrendsState {
   isPanningTrendChart: boolean;
   trends: Trend[];
   selectedTrendCategory: TrendCategories;
-  selectedTrend: Trend | null;
+  selectedTrendItem: Trend | null;
 }
 
 export const initialState: TrendsState = {
   isPanningTrendChart: false,
   trends: [],
   selectedTrendCategory: TrendCategories.netWorth,
-  selectedTrend: null,
+  selectedTrendItem: null,
 };
 
 export const trendsStore = createSlice({
@@ -49,14 +50,22 @@ export const trendsStore = createSlice({
       state.trends = action.payload;
       AsyncStorage.setItem(TRENDS_STORAGE_KEY, JSON.stringify(action.payload));
     },
-    setSelectedTrend: (state, action: PayloadAction<Trend>) => {
-      state.selectedTrend = action.payload;
+    setSelectedTrendItem: (state, action: PayloadAction<Trend>) => {
+      state.selectedTrendItem = action.payload;
     },
     setSelectedTrendCategory: (
       state,
       action: PayloadAction<TrendCategories>,
     ) => {
+      // set trend category first
       state.selectedTrendCategory = action.payload;
+      // set last item as selectedTrendItem
+      const trends = state.trends as Trend[];
+      const filteredTrends = filterTrends(action.payload, trends);
+      const lastItem = filteredTrends[filteredTrends.length - 1];
+      if (lastItem) {
+        state.selectedTrendItem = lastItem;
+      }
       AsyncStorage.setItem(SELECTED_TREND_CATEGORY_STORAGE_KEY, action.payload);
     },
   },
@@ -66,14 +75,14 @@ export const {
   setIsPanningTrendsChart,
   setTrends,
   setSelectedTrendCategory,
-  setSelectedTrend,
+  setSelectedTrendItem,
 } = trendsStore.actions;
 
 export const getIsPanningTrendsChart = (state: RootState) =>
   state.trends.isPanningTrendChart;
 export const getTrends = (state: RootState) => state.trends.trends;
-export const getSelectedTrend = (state: RootState) =>
-  state.trends.selectedTrend;
+export const getSelectedTrendItem = (state: RootState) =>
+  state.trends.selectedTrendItem;
 export const getSelectedTrendCategory = (state: RootState) =>
   state.trends.selectedTrendCategory;
 

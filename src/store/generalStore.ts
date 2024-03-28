@@ -17,7 +17,6 @@ interface GeneralState {
   isAuthenticated: boolean;
   env: AbbyEnvironment;
   error: Error | undefined;
-  isPanningChart: boolean;
   isSyncing: boolean;
 }
 
@@ -27,7 +26,6 @@ export const initialState: GeneralState = {
   isAuthenticated: false,
   env: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   error: undefined,
-  isPanningChart: false,
   isSyncing: false,
 };
 
@@ -52,9 +50,6 @@ export const generalSlice = createSlice({
     setError: (state, action: PayloadAction<Error | undefined>) => {
       state.error = action.payload;
     },
-    setIsPanningChart: (state, action: PayloadAction<boolean>) => {
-      state.isPanningChart = action.payload;
-    },
     setIsSyncing: (state, action: PayloadAction<boolean>) => {
       state.isSyncing = action.payload;
     },
@@ -66,7 +61,6 @@ export const {
   setIsAppLoading,
   setIsAuthenticated,
   setError,
-  setIsPanningChart,
   setIsSyncing,
 } = generalSlice.actions;
 
@@ -76,8 +70,6 @@ export const getIsAuthenticated = (state: RootState) =>
   state.general.isAuthenticated;
 export const getEnv = (state: RootState) => state.general.env;
 export const getError = (state: RootState) => state.general.error;
-export const getIsPanningChart = (state: RootState) =>
-  state.general.isPanningChart;
 export const getIsSyncing = (state: RootState) => state.general.isSyncing;
 
 export default generalSlice.reducer;

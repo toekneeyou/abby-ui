@@ -39,6 +39,7 @@ import {
   setSelectedTrendCategory,
   setTrends,
 } from '@store/trendsStore';
+import {normalizeTrends} from '@services/normalizeData';
 
 type LoginScreenProps = BottomTabScreenProps<RootStackParamList, 'Login'>;
 
@@ -85,7 +86,7 @@ export default function LoginScreen({navigation, route}: LoginScreenProps) {
       const trends = await AsyncStorage.getItem(TRENDS_STORAGE_KEY);
       if (trends) {
         const parsedTrends = JSON.parse(trends) as Trend[];
-        dispatch(setTrends(parsedTrends));
+        dispatch(setTrends(normalizeTrends(parsedTrends)));
       }
       // load selected trend category into redux
       const selectedTrendCategory = (await AsyncStorage.getItem(
