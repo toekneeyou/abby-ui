@@ -1,6 +1,11 @@
 import React from 'react';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import {SafeAreaView, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  LayoutChangeEvent,
+} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faDollar,
@@ -15,8 +20,10 @@ import {
   RootStackParamList,
   getIsAppLoading,
   getIsAuthenticated,
+  setCurrentRoute,
 } from '../store/generalStore';
-import {useAppSelector} from '../store/store';
+import {useAppDispatch, useAppSelector} from '../store/store';
+import {setLayout} from '@store/layoutStore';
 
 export default function BottomNavBar({
   state,
@@ -24,20 +31,30 @@ export default function BottomNavBar({
   navigation,
   insets,
 }: BottomTabBarProps) {
+  const dispatch = useAppDispatch();
   const isAppLoading = useAppSelector(getIsAppLoading);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
 
   if (isAppLoading || !isAuthenticated) return null;
 
+  const handleLayout = (e: LayoutChangeEvent) => {
+    dispatch(
+      setLayout({
+        name: 'BottomNavBar',
+        layout: e.nativeEvent.layout,
+      }),
+    );
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} onLayout={handleLayout}>
       {state.routes.map((route, index) => {
         const isSelected = state.index === index;
         const routeName = route.name as keyof RootStackParamList;
         let icon: IconProp;
 
         switch (routeName) {
-          case 'Net Worth':
+          case 'Home':
             icon = faHouse;
             break;
           case 'Transactions':
@@ -57,7 +74,10 @@ export default function BottomNavBar({
             key={route.name}
             disabled={isSelected}
             style={[styles.item, isSelected && styles.selectedItem]}
-            onPress={() => navigation.navigate(routeName)}>
+            onPress={() => {
+              dispatch(setCurrentRoute(routeName));
+              navigation.navigate(routeName);
+            }}>
             <FontAwesomeIcon
               size={20}
               icon={icon}
@@ -90,6 +110,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   selectedItem: {
-    borderTopColor: colors.eggplant[10],
+    borderTopColor: colors.pistachio[20],
   },
 });

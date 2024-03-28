@@ -21,12 +21,16 @@ type AccordionProps = {
   children: React.JSX.Element[];
   header: React.JSX.Element;
   initialIsCollapsed: boolean;
+  headerBackgroundColor?: string;
+  caretColor?: string;
 };
 
 export default function Accordion({
   children,
   header,
   initialIsCollapsed,
+  headerBackgroundColor = colors.white,
+  caretColor = colors.eggplant[20],
 }: AccordionProps) {
   const [isCollapsed, setIsCollapsed] = useState(initialIsCollapsed);
 
@@ -46,6 +50,7 @@ export default function Accordion({
             borderEndStartRadius: borders.radius,
             borderEndEndRadius: borders.radius,
           },
+          {backgroundColor: headerBackgroundColor},
         ]}
         onPress={toggleAccordon}>
         <View style={{flex: 1}}>{header}</View>
@@ -53,7 +58,7 @@ export default function Accordion({
           <FontAwesomeIcon
             icon={faChevronDown}
             size={16}
-            color={colors.eggplant[20]}
+            color={caretColor}
             style={{transform: [{rotate: isCollapsed ? '0deg' : '180deg'}]}}
           />
         </View>
@@ -67,10 +72,6 @@ const styles = StyleSheet.create({
   accordion: {
     backgroundColor: colors.white,
     borderRadius: borders.radius,
-    borderBottomColor: colors.pistachio[30],
-    borderBottomWidth: 3,
-    borderRightColor: colors.pistachio[30],
-    borderRightWidth: 3,
   },
   accordionHeader: {
     height: 65,

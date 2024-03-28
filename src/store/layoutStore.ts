@@ -20,15 +20,29 @@ interface LayoutState {
   isSubHeaderShown: boolean;
 }
 
-export const zIndices: {[key: string]: number} = {
-  netWorthScreen: 0,
+export const zIndices = {
+  homeScreen: 0,
   header: 100,
   subHeader: 90,
+  dropdown: 80,
 };
-export const heights: {[key: string]: number} = {
-  header: 50,
+export const heights = {
+  header: 36,
   subHeader: 40,
-  infoDisplay: 120,
+  trendDetail: 90,
+  trendCategoryFilter: 40,
+  chart: 100,
+  chartFilters: 40,
+  progressBar: 4,
+};
+
+export const paddings = {
+  standard: {h: 20, v: 20},
+  trendDetail: {h: 20, v: 20},
+  trendCategoryFilter: {h: 20, v: 4},
+  header: {h: 20, v: 0},
+  accountCards: {h: 20, v: 15},
+  chartFilters: {h: 20, v: 0},
 };
 
 const initialState: LayoutState = {

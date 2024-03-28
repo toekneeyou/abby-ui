@@ -4,6 +4,7 @@ import layoutReducer from './layoutStore';
 import generalReducer from './generalStore';
 import financialDataReducer from './financialDataStore';
 import userReducer from './userStore';
+import trendsReducer from './trendsStore';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     general: generalReducer,
     financialData: financialDataReducer,
     user: userReducer,
+    trends: trendsReducer,
   },
 });
 

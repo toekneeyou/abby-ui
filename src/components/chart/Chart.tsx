@@ -143,6 +143,8 @@ export default function Chart({
   useEffect(() => {
     panResponder.panHandlers.onResponderGrant = e => {
       setIsPanning(true);
+      const closest = getClosestPoint(e.nativeEvent.locationX);
+      setCursorPosition(closest.point);
       onPanStart?.();
     };
   }, [dataPoints, onPanStart]);

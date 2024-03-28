@@ -2,10 +2,11 @@ import {useAppDispatch, useAppSelector} from '@store/store';
 import {getUser} from '@store/userStore';
 import {
   FetchInstitutionsRequest,
-  FetchNetWorthsRequest,
+  FetchTrendsRequest,
+  SaveTrendRequest,
   fetchInstitutions,
-  fetchNetWorths,
-  saveNetWorth,
+  fetchTrends,
+  saveTrend,
 } from '@services/databaseService';
 import {FetchBalanceRequest, fetchBalance} from '@services/plaidService';
 import {
@@ -13,13 +14,15 @@ import {
   Institution,
   setAccounts,
   setInstitutions,
-  setNetWorths,
 } from '@store/financialDataStore';
 import {
-  calculateNetWorth,
-  netWorthSort,
   organizeAccountsResponseByCategory,
+  returnDateString,
+  trendSort,
 } from '@services/helper';
+import {TrendCategories, setTrends} from '@store/trendsStore';
+import {setIsSyncing} from '@store/generalStore';
+import {normalizeTrendCategory} from '@services/normalizeData';
 
 export default function useSyncAccounts() {
   const dispatch = useAppDispatch();
@@ -39,27 +42,46 @@ export default function useSyncAccounts() {
     }
   };
 
-  const syncNetWorth = async (accounts: Account[][]) => {
+  const syncTrends = async (accounts: Account[][]) => {
     try {
-      const netWorth = calculateNetWorth(accounts);
-      const today = new Date();
-      await saveNetWorth({
-        amount: netWorth,
-        userId: user?.id as number,
-        day: today.getDate(),
-        month: today.getMonth(),
-        year: today.getFullYear(),
+      const today = returnDateString(new Date());
+      const trendsObject: {[key in TrendCategories]?: number} = {};
+
+      accounts.flat().forEach(a => {
+        const category = normalizeTrendCategory(a.plaidType);
+        if (category) {
+          trendsObject[category] =
+            (trendsObject[category] ?? 0) + a.plaidCurrentBalance;
+        }
       });
 
-      const fetchNetWorthsRequest: FetchNetWorthsRequest = {
+      const trendsRequests = Object.entries(trendsObject).map(
+        ([category, value]) => {
+          const saveTrendRequest: SaveTrendRequest = {
+            date: today,
+            userId: user?.id as number,
+            value: value,
+            category: category as TrendCategories,
+          };
+          return saveTrendRequest;
+        },
+      );
+
+      const trendsPromises = trendsRequests.map(t => {
+        return saveTrend(t);
+      });
+
+      await Promise.all(trendsPromises);
+
+      const fetchTrendsRequest: FetchTrendsRequest = {
         userId: user?.id as number,
       };
-      const netWorths = await fetchNetWorths(fetchNetWorthsRequest);
-      netWorths.sort(netWorthSort);
-      dispatch(setNetWorths(netWorths));
-      return netWorths;
+      const trends = await fetchTrends(fetchTrendsRequest);
+      trends.sort(trendSort);
+      dispatch(setTrends(trends));
+      return trends;
     } catch (error) {
-      console.error('syncNetWorth', error);
+      console.error('syncTrends', error);
       throw error;
     }
   };
@@ -75,10 +97,10 @@ export default function useSyncAccounts() {
         return fetchBalance(fetchBalanceRequest);
       });
       const accountsResponse = await Promise.all(accountPromises);
-      const netWorths = await syncNetWorth(accountsResponse);
+      const trends = await syncTrends(accountsResponse);
       const accounts = organizeAccountsResponseByCategory(accountsResponse);
       dispatch(setAccounts(accounts));
-      return {accounts, netWorths};
+      return {accounts, trends};
     } catch (error) {
       console.error('syncAccounts', error);
       throw error;
@@ -87,12 +109,15 @@ export default function useSyncAccounts() {
 
   const syncEverything = async () => {
     try {
+      dispatch(setIsSyncing(true));
       const institutions = await syncInstitutions();
-      const {accounts, netWorths} = await syncAccounts(institutions);
-      return {institutions, accounts, netWorths};
+      const {accounts, trends} = await syncAccounts(institutions);
+      return {institutions, accounts, trends};
     } catch (error) {
       console.error('syncEverything', error);
       throw error;
+    } finally {
+      dispatch(setIsSyncing(false));
     }
   };
 

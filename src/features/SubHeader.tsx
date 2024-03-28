@@ -3,7 +3,7 @@ import {Animated, StyleSheet} from 'react-native';
 
 import {colors, spacing} from '../styles/styleVariables';
 import {getIsSubHeaderShown, heights, zIndices} from '../store/layoutStore';
-import NetWorthSubHeader from './NetWorthScreenSubHeader';
+import HomeScreenSubHeader from './HomeScreenSubHeader';
 import {useAppSelector} from '../store/store';
 import {getCurrentRoute} from '../store/generalStore';
 
@@ -11,23 +11,6 @@ export default function SubHeader() {
   const currentRoute = useAppSelector(getCurrentRoute);
   const headerAnim = useRef(new Animated.Value(0)).current;
   const isSubHeaderShown = useAppSelector(getIsSubHeaderShown);
-
-  let SubHeader = NetWorthSubHeader;
-
-  useEffect(() => {
-    switch (currentRoute) {
-      case 'Net Worth':
-        SubHeader = NetWorthSubHeader;
-        break;
-      case 'Transactions':
-        SubHeader = NetWorthSubHeader;
-        break;
-      case 'Settings':
-        SubHeader = NetWorthSubHeader;
-        break;
-      default:
-    }
-  }, [currentRoute]);
 
   useEffect(() => {
     Animated.timing(headerAnim, {
@@ -57,7 +40,7 @@ export default function SubHeader() {
           }),
         },
       ]}>
-      <SubHeader />
+      {currentRoute === 'Home' && <HomeScreenSubHeader />}
     </Animated.View>
   );
 }

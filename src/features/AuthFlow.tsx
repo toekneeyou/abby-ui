@@ -11,7 +11,7 @@ import {
   initialState,
 } from '@store/generalStore';
 import LoginScreen from '@screens/LoginScreen';
-import NetWorthScreen from '@screens/NetWorthScreen';
+import HomeScreen from '@screens/HomeScreen';
 import TransactionsScreen from '@screens/TransactionsScreen';
 import {useAppSelector} from '@store/store';
 import useSyncAccounts from '@hooks/useSyncAccounts';
@@ -41,7 +41,7 @@ export default function AuthNavContainer() {
         <Tab.Screen name="Login" component={LoginScreen} />
         {isAuthenticated && (
           <>
-            <Tab.Screen name="Net Worth" component={NetWorthScreen} />
+            <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Transactions" component={TransactionsScreen} />
           </>
         )}

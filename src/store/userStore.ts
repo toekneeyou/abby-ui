@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from './store';
 import {Account, Institution, Transaction} from './financialDataStore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type User = {
   username?: string;
@@ -26,6 +27,8 @@ interface UserState {
   linkToken: string | undefined;
 }
 
+export const USER_ID_STORAGE_KEY = 'userIdStorageKey';
+
 export const initialState: UserState = {
   user: undefined,
   linkToken: undefined,
@@ -37,6 +40,7 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
+      AsyncStorage.setItem(USER_ID_STORAGE_KEY, String(action.payload.id));
     },
     setLinkToken: (state, action: PayloadAction<string>) => {
       state.linkToken = action.payload;

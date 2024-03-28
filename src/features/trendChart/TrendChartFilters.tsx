@@ -3,19 +3,23 @@ import {StyleSheet, View} from 'react-native';
 
 import Chip from '@components/Chip';
 import {
-  NetWorthFilterOption,
-  netWorthChartFilters,
-} from '@features/netWorthChart/useNetWorthFilters';
+  TrendChartFilterOption,
+  trendChartFilters,
+} from '@features/trendChart/useTrendFilters';
 import {colors} from '@styles/styleVariables';
+import {heights, paddings} from '@store/layoutStore';
 
-type ChartFilterProps = {
-  filter: NetWorthFilterOption;
-  setFilter: Dispatch<SetStateAction<NetWorthFilterOption>>;
+type TrendChartFiltersProps = {
+  filter: TrendChartFilterOption;
+  setFilter: Dispatch<SetStateAction<TrendChartFilterOption>>;
 };
-export default function ChartFilters({filter, setFilter}: ChartFilterProps) {
+export default function TrendChartFilters({
+  filter,
+  setFilter,
+}: TrendChartFiltersProps) {
   return (
     <View style={[styles.chartFilters]}>
-      {netWorthChartFilters.map(f => {
+      {trendChartFilters.map(f => {
         return (
           <Chip
             key={f}
@@ -31,9 +35,11 @@ export default function ChartFilters({filter, setFilter}: ChartFilterProps) {
 
 const styles = StyleSheet.create({
   chartFilters: {
+    alignItems: 'center',
+    height: heights.chartFilters,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     backgroundColor: colors.white,
-    paddingVertical: 10,
+    paddingHorizontal: paddings.chartFilters.h,
   },
 });
