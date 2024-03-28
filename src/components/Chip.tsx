@@ -7,30 +7,37 @@ type ChipProps = {
   label: string;
   onPress?: (arg?: any) => void;
   type?: ChipType;
+  color?: ChipColor;
 };
 
 type ChipType = 'filled' | 'outlined' | 'text';
+export type ChipColor = 'eggplant' | 'gray' | 'black' | 'tomato' | 'pistachio';
 
-export default function Chip({label, onPress, type = 'filled'}: ChipProps) {
+export default function Chip({
+  label,
+  onPress,
+  type = 'filled',
+  color = 'eggplant',
+}: ChipProps) {
   let backgroundColor;
   let fontColor;
   let borderColor;
   switch (type) {
     case 'outlined':
       backgroundColor = 'transparent';
-      fontColor = colors.eggplant[20];
-      borderColor = colors.eggplant[20];
+      fontColor = colors[color][30];
+      borderColor = colors[color][30];
       break;
     case 'text':
       backgroundColor = 'transparent';
-      fontColor = colors.eggplant[20];
+      fontColor = colors[color][30];
       borderColor = 'transparent';
       break;
     case 'filled':
     default:
-      backgroundColor = colors.eggplant[20];
+      backgroundColor = colors[color][30];
       fontColor = colors.white;
-      borderColor = colors.eggplant[20];
+      borderColor = colors[color][30];
   }
   return (
     <Pressable
